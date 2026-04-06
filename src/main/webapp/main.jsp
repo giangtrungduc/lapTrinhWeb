@@ -1,10 +1,10 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%
     // Kiểm tra session để đảm bảo nhân viên đã đăng nhập
-    String user = (String) request.getAttribute("user");
+    String user = (String) session.getAttribute("user"); 
     if (user == null) {
         response.sendRedirect("login.jsp");
-
+        return;
     }
 %>
 <!DOCTYPE html>
@@ -141,7 +141,7 @@
 
         <div class="sidebar">
             <h2>HOTEL MANAGER</h2>
-            <a href="main.jsp"><i class="fa-solid fa-gauge"> <%=user%> </i> Dashboard</a>
+            <a href="main.jsp"><i class="fa-solid fa-gauge"> </i> Dashboard</a>
             <a href="CustomerServlet"><i class="fa-solid fa-users"></i> Khách hàng</a>
             <a href="RoomServlet"><i class="fa-solid fa-door-open"></i> Phòng & Loại phòng</a>
             <a href="BookingServlet"><i class="fa-solid fa-calendar-check"></i> Đặt phòng</a>
@@ -154,7 +154,7 @@
         <div class="main-content">
             <div class="header">
                 <div class="user-info">
-                    Xin chào, <i class="fa-solid fa-user-tie"></i> 
+                    Xin chào, <%=user%><i class="fa-solid fa-user-tie"></i> 
                 </div>
                 <a href="LogoutServlet" class="btn-logout">Đăng xuất</a>
             </div>
@@ -180,7 +180,7 @@
                     <p>Tạo mới đơn đặt phòng cho khách.</p>
                 </a>
 
-                <a href="CheckInServlet" class="card">
+                <a href="check-in.jsp" class="card">
                     <i class="fa-solid fa-key"></i>
                     <h3>Check-in / Out</h3>
                     <p>Giao phòng và nhận trả phòng nhanh.</p>

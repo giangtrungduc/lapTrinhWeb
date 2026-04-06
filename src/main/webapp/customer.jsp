@@ -231,6 +231,35 @@
             table td {
                 vertical-align: middle;
             }
+            .header-container {
+                display: flex;
+                justify-content: space-between; /* Đẩy 2 phần tử về 2 phía */
+                align-items: center;           /* Căn giữa theo chiều dọc */
+                margin-bottom: 20px;
+                border-bottom: 2px solid #eee; /* Đường kẻ dưới tiêu đề */
+                padding-bottom: 10px;
+            }
+
+            .header-container h2 {
+                margin: 0;                     /* Bỏ margin mặc định để không bị lệch */
+                border-bottom: none;           /* Bỏ border cũ của h2 nếu có */
+            }
+
+            .btn-home {
+                text-decoration: none;
+                background-color: #6c757d;      /* Màu xám trung tính */
+                color: white;
+                padding: 8px 15px;
+                border-radius: 6px;
+                font-size: 14px;
+                font-weight: 600;
+                transition: background 0.3s;
+            }
+
+            .btn-home:hover {
+                background-color: #495057;
+                color: #fff;
+            }
         </style>
     </head>
 
@@ -251,11 +280,18 @@
             if (event.target == modal)
                 closeModal();
         }
+
     </script>
 
     <body>
         <div class="container">
-            <h2><i class="fa-solid fa-users-gear"></i> QUẢN LÝ KHÁCH HÀNG</h2>
+            <div class="header-container">
+                <h2><i class="fa-solid fa-users-gear"></i> QUẢN LÝ KHÁCH HÀNG</h2>
+
+                <a href="main.jsp" class="btn-home">
+                    <i class="fa-solid fa-house"></i> Quay về trang chủ
+                </a>
+            </div>
 
             <div class="toolbar">
                 <form action="add-customer-form.jsp" method="post">

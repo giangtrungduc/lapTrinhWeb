@@ -24,6 +24,14 @@
         <servlet-name>FilterCustomerServlet</servlet-name>
         <servlet-class>com.mycompany.laptrinhweb.controller.FilterCustomerServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CheckInServlet</servlet-name>
+        <servlet-class>com.mycompany.laptrinhweb.controller.CheckInServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>FilterCheckedInCustomerServlet</servlet-name>
+        <servlet-class>com.mycompany.laptrinhweb.controller.FilterCheckedInCustomerServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -47,6 +55,14 @@
     <servlet-mapping>
         <servlet-name>FilterCustomerServlet</servlet-name>
         <url-pattern>/FilterCustomerServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CheckInServlet</servlet-name>
+        <url-pattern>/CheckInServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FilterCheckedInCustomerServlet</servlet-name>
+        <url-pattern>/FilterCheckedInCustomerServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
