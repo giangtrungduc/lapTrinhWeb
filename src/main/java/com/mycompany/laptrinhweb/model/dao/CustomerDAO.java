@@ -2,6 +2,7 @@
 package com.mycompany.laptrinhweb.model.dao;
 
 import com.mycompany.laptrinhweb.model.DBConnection;
+import com.mycompany.laptrinhweb.model.dto.AddingCustomerDTO;
 import com.mycompany.laptrinhweb.model.dto.CustomerDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -73,5 +74,49 @@ public class CustomerDAO {
         catch(Exception e){
             e.printStackTrace();
         }
+    }
+    public void addCustomer(AddingCustomerDTO customer)throws Exception {
+        DBConnection db = new DBConnection();
+        try(Connection conn = db.getConnection()){
+            String sql="insert into khachhang (HoTen, CCCD, SDT, Email, DiaChi) values (?,?,?,?,?)";
+            PreparedStatement ps=conn.prepareStatement(sql);
+            ps.setString(1, customer.getHoTen());
+            ps.setString(5, customer.getDiaChi());
+            ps.setString(4, customer.getEmail());
+            ps.setString(2, customer.getCCCD());
+            ps.setString(3, customer.getSDT());
+            ps.execute();
+        }
+    }
+    public List<CustomerDTO> filterCustomer(String result){
+        List<CustomerDTO> li = new ArrayList<>();
+        String keyword = "%"+result+"%";
+        DBConnection db = new DBConnection();
+        try(Connection conn = db.getConnection()){
+            String sql="select * from khachhang where HoTen like ? or CCCD like ? or SDT like ? ";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, keyword);
+            ps.setString(2, keyword);
+            ps.setString(3, keyword);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                CustomerDTO customer = new CustomerDTO();
+                customer.setMakh(rs.getInt("MaKH"));
+                customer.setHoten(rs.getString("HoTen"));
+                customer.setCccd(rs.getString("CCCD"));
+                customer.setDiachi(rs.getString("DiaChi"));
+                customer.setEmail(rs.getString("Email"));
+                customer.setSdt(rs.getString("SDT"));
+                int makh=rs.getInt("MaKH");
+                int count=countBookingForCustomer(makh);
+                customer.setSolandat(count);
+                li.add(customer);
+            }
+            
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return li;
     }
 }

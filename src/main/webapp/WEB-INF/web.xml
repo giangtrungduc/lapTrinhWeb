@@ -16,6 +16,14 @@
         <servlet-name>EmployeeServlet</servlet-name>
         <servlet-class>com.mycompany.laptrinhweb.controller.EmployeeServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AddCustomer</servlet-name>
+        <servlet-class>com.mycompany.laptrinhweb.controller.AddCustomer</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>FilterCustomerServlet</servlet-name>
+        <servlet-class>com.mycompany.laptrinhweb.controller.FilterCustomerServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -31,6 +39,14 @@
     <servlet-mapping>
         <servlet-name>EmployeeServlet</servlet-name>
         <url-pattern>/EmployeeServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddCustomer</servlet-name>
+        <url-pattern>/AddCustomer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FilterCustomerServlet</servlet-name>
+        <url-pattern>/FilterCustomerServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
