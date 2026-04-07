@@ -192,7 +192,7 @@
                     <p>Danh mục đồ ăn, thức uống, giặt ủi.</p>
                 </a>
 
-                <a href="InvoiceServlet" class="card">
+                <a href="bill.jsp" class="card">
                     <i class="fa-solid fa-file-invoice"></i>
                     <h3>Lập hóa đơn</h3>
                     <p>Tính toán tiền phòng và dịch vụ.</p>

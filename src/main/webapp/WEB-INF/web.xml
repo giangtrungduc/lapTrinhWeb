@@ -32,6 +32,14 @@
         <servlet-name>FilterCheckedInCustomerServlet</servlet-name>
         <servlet-class>com.mycompany.laptrinhweb.controller.FilterCheckedInCustomerServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>FindBookingServlet</servlet-name>
+        <servlet-class>com.mycompany.laptrinhweb.controller.FindBookingServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>InvoiceServlet</servlet-name>
+        <servlet-class>com.mycompany.laptrinhweb.controller.InvoiceServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -63,6 +71,14 @@
     <servlet-mapping>
         <servlet-name>FilterCheckedInCustomerServlet</servlet-name>
         <url-pattern>/FilterCheckedInCustomerServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FindBookingServlet</servlet-name>
+        <url-pattern>/FindBookingServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>InvoiceServlet</servlet-name>
+        <url-pattern>/InvoiceServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
