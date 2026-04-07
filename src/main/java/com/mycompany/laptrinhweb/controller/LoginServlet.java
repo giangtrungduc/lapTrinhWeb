@@ -4,6 +4,7 @@
  */
 package com.mycompany.laptrinhweb.controller;
 
+import com.mycompany.laptrinhweb.model.dao.EmployeeDAO;
 import com.mycompany.laptrinhweb.model.dto.LoginDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import com.mycompany.laptrinhweb.model.dao.LoginDAO;
+import com.mycompany.laptrinhweb.model.dto.EmployeeDTO;
 
 /**
  *
@@ -33,6 +35,8 @@ public class LoginServlet extends HttpServlet {
         System.out.println(username + " " + password);
         LoginDAO lgDAO = new LoginDAO();
         String result = lgDAO.checkLogin(username, password);
+        EmployeeDAO empDAO = new EmployeeDAO();
+        EmployeeDTO emp = empDAO.getEmployeeByUsername(username);
         String errMsg = "Ten dang nhap hoac mat khau khong hop le";
         if (result == null) {
             request.setAttribute("failLogin", errMsg);
@@ -45,7 +49,7 @@ public class LoginServlet extends HttpServlet {
             jakarta.servlet.http.HttpSession session = request.getSession();
             // Lưu vào SESSION, không phải request
             session.setAttribute("user", user);
-
+            session.setAttribute("MaNV", emp.getMaNV());
             // Chuyển hướng (Redirect) thay vì Forward để tránh lỗi lặp lại request
             response.sendRedirect("main.jsp");
         }

@@ -5,6 +5,7 @@
 package com.mycompany.laptrinhweb.controller;
 
 import com.mycompany.laptrinhweb.model.dao.BookingDAO;
+import com.mycompany.laptrinhweb.model.dao.InvoiceDAO;
 import com.mycompany.laptrinhweb.model.dto.BillDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -24,6 +25,13 @@ public class FindBookingServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         int madp= Integer.parseInt(request.getParameter("madp"));
+        InvoiceDAO invoice = new InvoiceDAO();
+        if (!invoice.findBookingInvoice(madp)){
+            request.setAttribute("msgf", "Mã đặt phòng này đã được thanh toán");
+            request.getRequestDispatcher("bill.jsp").forward(request, response);
+            return;
+        }
+
         BookingDAO bookingDAO = new BookingDAO();
         BillDTO bill = new BillDTO();
         bill=bookingDAO.FindBookingById(madp);

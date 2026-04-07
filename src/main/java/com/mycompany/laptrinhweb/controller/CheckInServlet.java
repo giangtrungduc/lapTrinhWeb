@@ -32,7 +32,7 @@ public class CheckInServlet extends HttpServlet {
         else{
             request.setAttribute("msg", "Check-in unsuccessfully");
         }
-        request.getRequestDispatcher("main.jsp").forward(request, response);
+        request.getRequestDispatcher("check-in.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

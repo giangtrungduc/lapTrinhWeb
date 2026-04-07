@@ -30,15 +30,28 @@ public class BookingDAO {
                 booking.setCccd(rs.getString("CCCD"));
                 booking.setEmail(rs.getString("Email"));
                 booking.setSoPhong(rs.getInt("SoPhong"));
+                booking.setMaPhong(rs.getInt("MaPhong"));
                 LocalDateTime ngayNhanDuKien = rs.getTimestamp("NgayNhanDuKien").toLocalDateTime();
                 LocalDateTime ngayTraDuKien = rs.getTimestamp("NgayTraDuKien").toLocalDateTime();
                 booking.setNgayNhanDuKien(ngayNhanDuKien);
                 booking.setNgayTraDuKien(ngayTraDuKien);
-                booking.setGiaPhong(rs.getBigDecimal("GiaCoBan"));
+                booking.setGiaPhong(rs.getBigDecimal("GiaPhongTaiThoiDiemDat"));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return booking;
+    }
+    public void completeBooking(int madp){
+        DBConnection db = new DBConnection();
+        try (Connection conn=db.getConnection()){
+            String sql="update datphong set TrangThai='HoanThanh' where MaDatPhong=?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, madp);
+            ps.execute();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
     }
 }
