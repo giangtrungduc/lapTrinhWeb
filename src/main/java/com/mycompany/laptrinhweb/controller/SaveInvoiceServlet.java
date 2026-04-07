@@ -14,7 +14,7 @@ public class SaveInvoiceServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
+
         try {
             // 1. Nhận giá trị từ các thẻ <input> của form
             String maDatPhongStr = request.getParameter("madp");
@@ -26,15 +26,19 @@ public class SaveInvoiceServlet extends HttpServlet {
             // 2. Chuyển đổi kiểu dữ liệu (với tiền tệ nên dùng BigDecimal)
             int maDatPhong = Integer.parseInt(maDatPhongStr);
             int maPhong = Integer.parseInt(maPhongStr);
-            BigDecimal tongTienPhong,tongTienDV;
-            if (tienPhongStr==null){
+            BigDecimal tongTienPhong, tongTienDV;
+            // Sửa lại đoạn check null cho chắc chắn
+            if (tienPhongStr == null || tienPhongStr.equals("null")) {
                 tongTienPhong = BigDecimal.ZERO;
+            } else {
+                tongTienPhong = new BigDecimal(tienPhongStr);
             }
-            else tongTienPhong = new BigDecimal(tienPhongStr);
-            if (tienDVStr==null){
-                tongTienDV=BigDecimal.ZERO;
+
+            if (tienDVStr == null || tienDVStr.equals("null")) {
+                tongTienDV = BigDecimal.ZERO;
+            } else {
+                tongTienDV = new BigDecimal(tienDVStr);
             }
-            else tongTienDV = new BigDecimal(tienDVStr);
 
             // 3. Gọi DAO để ghi vào Database
             InvoiceDAO dao = new InvoiceDAO();
@@ -44,7 +48,7 @@ public class SaveInvoiceServlet extends HttpServlet {
             bookingDAO.completeBooking(maDatPhong);
             // chuyen phong ve trang thai trong
             RoomDAO roomDAO = new RoomDAO();
-            roomDAO.setRoomAvailable(maPhong);
+            roomDAO.updateTrangThai(maPhong, "T rong");
 
             // 4. Sau khi lưu xong, chuyển hướng về trang danh sách hoặc thông báo thành công
             // Ở đây mình ví dụ chuyển về trang main
