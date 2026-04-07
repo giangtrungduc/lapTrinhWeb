@@ -5,6 +5,7 @@
 package com.mycompany.laptrinhweb.controller;
 
 import com.mycompany.laptrinhweb.model.dao.BookingDAO;
+import com.mycompany.laptrinhweb.model.dao.InvoiceDAO;
 import com.mycompany.laptrinhweb.model.dto.BillDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -12,6 +13,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -26,6 +28,7 @@ public class InvoiceServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         int madp = Integer.parseInt(request.getParameter("madp"));
+        
         BookingDAO bookingDAO = new BookingDAO();
         BillDTO bill = new BillDTO();
         bill = bookingDAO.FindBookingById(madp);
@@ -37,11 +40,14 @@ public class InvoiceServlet extends HttpServlet {
         // Chuyển soDem sang BigDecimal rồi mới nhân
         BigDecimal tienPhong = BigDecimal.valueOf(soDem).multiply(bill.getGiaPhong());
 
-// Sau đó gán vào object bill để hiển thị
+        // Sau đó gán vào object bill để hiển thị
         // ... (đoạn code tính toán soDem và tienPhong của Kiên) ...
         bill.setTongTienPhong(tienPhong);
 
-// QUAN TRỌNG: Gửi đối tượng bill sang JSP
+        // QUAN TRỌNG: Gửi đối tượng bill sang JSP
+        HttpSession session = request.getSession();
+        String user = (String) session.getAttribute("user");
+        System.out.println(user);
         request.setAttribute("bill", bill);
         request.getRequestDispatcher("bill.jsp").forward(request, response);
     }

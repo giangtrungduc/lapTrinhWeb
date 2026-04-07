@@ -176,4 +176,25 @@ public class EmployeeDAO {
         }
         return false;
     }
+    public EmployeeDTO getEmployeeByUsername(String username){
+        EmployeeDTO emp = new EmployeeDTO();
+        DBConnection db = new DBConnection();
+        try(Connection conn = db.getConnection()){
+            String sql = "select * from nhanvien where TenDangNhap=?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                emp.setHoTen(rs.getString("HoTen"));
+                emp.setChucVu(rs.getString("ChucVu"));
+                emp.setMaNV(rs.getInt("MaNV"));
+                emp.setSdt(rs.getString("SDT"));
+                emp.setMatKhauHash(rs.getString("MatKhauHash"));
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+        return emp;
+    }
 }

@@ -44,7 +44,10 @@
         <servlet-name>RoomServlet</servlet-name>
         <servlet-class>com.mycompany.laptrinhweb.controller.RoomServlet</servlet-class>
     </servlet>
-
+    <servlet>
+        <servlet-name>SaveInvoiceServlet</servlet-name>
+        <servlet-class>com.mycompany.laptrinhweb.controller.SaveInvoiceServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -89,11 +92,13 @@
         <servlet-name>RoomServlet</servlet-name>
         <url-pattern>/RoomServlet</url-pattern>
     </servlet-mapping>
-
+    <servlet-mapping>
+        <servlet-name>SaveInvoiceServlet</servlet-name>
+        <url-pattern>/SaveInvoiceServlet</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
-    
     <welcome-file-list>
         <welcome-file>login.jsp</welcome-file>
     </welcome-file-list>

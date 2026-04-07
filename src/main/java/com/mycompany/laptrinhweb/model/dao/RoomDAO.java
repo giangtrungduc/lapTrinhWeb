@@ -140,4 +140,16 @@ public class RoomDAO {
         }
         return list;
     }
+    public void setRoomAvailable(int map){
+        DBConnection db = new DBConnection();
+        try (Connection conn = db.getConnection()){
+            String sql = "update phong set TrangThai='Trong' where MaPhong=?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, map);
+            ps.execute();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }
