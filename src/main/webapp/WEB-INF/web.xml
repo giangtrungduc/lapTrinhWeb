@@ -32,6 +32,10 @@
         <servlet-name>FilterCheckedInCustomerServlet</servlet-name>
         <servlet-class>com.mycompany.laptrinhweb.controller.FilterCheckedInCustomerServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>HoaDonServlet</servlet-name>
+        <servlet-class>com.mycompany.laptrinhweb.controller.HoaDonServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -63,6 +67,10 @@
     <servlet-mapping>
         <servlet-name>FilterCheckedInCustomerServlet</servlet-name>
         <url-pattern>/FilterCheckedInCustomerServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>HoaDonServlet</servlet-name>
+        <url-pattern>/HoaDonServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>
