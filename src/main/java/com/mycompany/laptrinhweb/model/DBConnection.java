@@ -16,9 +16,12 @@ public class DBConnection {
         String url = "jdbc:mysql://localhost:3306/laptrinhweb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
         String user = "root";
 
+
 //        String password = "29092005";
 
         String password = "123456";
+
+
         Class.forName("com.mysql.cj.jdbc.Driver");
         return (Connection) DriverManager.getConnection(url, user, password);
     }

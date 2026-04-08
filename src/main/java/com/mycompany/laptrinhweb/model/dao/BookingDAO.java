@@ -16,7 +16,7 @@ public class BookingDAO {
     public BillDTO FindBookingById(int madatphong) {
         DBConnection db = new DBConnection();
         BillDTO booking = new BillDTO();
-        ServiceDAO service = new ServiceDAO();
+        InvoiceServiceDAO service = new InvoiceServiceDAO();
         booking.setServices(service.findServiceByMaDP(madatphong));
         try (Connection conn = db.getConnection()) {
             String sql = "select * from datphong a join phong b on a.MaPhong=b.MaPhong join khachhang c on c.MaKH=a.MaKH join loaiphong d on d.MaLoaiPhong=b.MaLoaiPhong where madatphong=?";

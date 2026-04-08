@@ -21,7 +21,7 @@ public class BillDTO {
     private BigDecimal tongThanhToan;
     private String hoTen,sdt,cccd,email;
     private int soPhong,soDem;
-    private List<ServiceDTO> services;
+    private List<InvoiceServiceDTO> services;
 
     public Integer getMaPhong() {
         return maPhong;
@@ -151,11 +151,11 @@ public class BillDTO {
         this.soDem = soDem;
     }
 
-    public List<ServiceDTO> getServices() {
+    public List<InvoiceServiceDTO> getServices() {
         return services;
     }
 
-    public void setServices(List<ServiceDTO> services) {
+    public void setServices(List<InvoiceServiceDTO> services) {
         this.services = services;
     }
     

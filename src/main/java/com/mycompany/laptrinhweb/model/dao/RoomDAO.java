@@ -140,6 +140,7 @@ public class RoomDAO {
         }
         return list;
     }
+
     public void setRoomAvailable(int map){
         DBConnection db = new DBConnection();
         try (Connection conn = db.getConnection()){
@@ -152,4 +153,5 @@ public class RoomDAO {
             e.printStackTrace();
         }
     }
+
 }
