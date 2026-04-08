@@ -4,7 +4,8 @@
     Author     : DELL
 --%>
 
-<%@page import="com.mycompany.laptrinhweb.model.dto.ServiceDTO"%>
+<%@page import="com.mycompany.laptrinhweb.model.dto.InvoiceServiceDTO"%>
+
 <%@page import="java.util.List"%>
 <%@page import="java.math.BigDecimal"%>
 <%@page import="com.mycompany.laptrinhweb.model.dto.BillDTO"%>
@@ -243,7 +244,7 @@
 
 
         <%
-            List<ServiceDTO> services = bill1.getServices();
+            List<InvoiceServiceDTO> services = bill1.getServices();
             BigDecimal tongTienDV = BigDecimal.ZERO;
         %>
 
@@ -261,7 +262,7 @@
 
             <%
                 if (services != null && !services.isEmpty()) {
-                    for (ServiceDTO svc : services) {
+                    for (InvoiceServiceDTO svc : services) {
                         // Tính toán thành tiền từng dòng
                         BigDecimal thanhTienRow = svc.getDonGia().multiply(new BigDecimal(svc.getSoLuong()));
                         tongTienDV = tongTienDV.add(thanhTienRow);

@@ -56,7 +56,10 @@
         <servlet-name>serviceManagementServlet</servlet-name>
         <servlet-class>com.mycompany.laptrinhweb.controller.serviceManagementServlet</servlet-class>
     </servlet>
-
+    <servlet>
+        <servlet-name>LogoutServlet</servlet-name>
+        <servlet-class>com.mycompany.laptrinhweb.controller.LogoutServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -113,11 +116,13 @@
         <servlet-name>serviceManagementServlet</servlet-name>
         <url-pattern>/serviceManagementServlet</url-pattern>
     </servlet-mapping>
-
+    <servlet-mapping>
+        <servlet-name>LogoutServlet</servlet-name>
+        <url-pattern>/LogoutServlet</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>
-
     <welcome-file-list>
         <welcome-file>login.jsp</welcome-file>
     </welcome-file-list>

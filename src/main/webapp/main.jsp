@@ -182,7 +182,7 @@
 
                 <a href="check-in.jsp" class="card">
                     <i class="fa-solid fa-key"></i>
-                    <h3>Check-in / Out</h3>
+                    <h3>Check-in</h3>
                     <p>Giao phòng và nhận trả phòng nhanh.</p>
                 </a>
 
@@ -194,7 +194,7 @@
 
                 <a href="bill.jsp" class="card">
                     <i class="fa-solid fa-file-invoice"></i>
-                    <h3>Lập hóa đơn</h3>
+                    <h3>Check-out và Lập hóa đơn</h3>
                     <p>Tính toán tiền phòng và dịch vụ.</p>
                 </a>
 
