@@ -40,6 +40,10 @@
         <servlet-name>RoomServlet</servlet-name>
         <servlet-class>com.mycompany.laptrinhweb.controller.RoomServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>serviceManagementServlet</servlet-name>
+        <servlet-class>com.mycompany.laptrinhweb.controller.serviceManagementServlet</servlet-class>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -80,6 +84,10 @@
     <servlet-mapping>
         <servlet-name>RoomServlet</servlet-name>
         <url-pattern>/RoomServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>serviceManagementServlet</servlet-name>
+        <url-pattern>/serviceManagementServlet</url-pattern>
     </servlet-mapping>
 
     <session-config>

@@ -145,7 +145,7 @@
             <a href="CustomerServlet"><i class="fa-solid fa-users"></i> Khách hàng</a>
             <a href="RoomServlet"><i class="fa-solid fa-door-open"></i> Phòng & Loại phòng</a>
             <a href="BookingServlet"><i class="fa-solid fa-calendar-check"></i> Đặt phòng</a>
-            <a href="ServiceServlet"><i class="fa-solid fa-bell-concierge"></i> Dịch vụ</a>
+            <a href="serviceManagementServlet"><i class="fa-solid fa-bell-concierge"></i> Dịch vụ</a>
             <a href="InvoiceServlet"><i class="fa-solid fa-file-invoice-dollar"></i> Hóa đơn</a>
             <a href="ReportServlet"><i class="fa-solid fa-chart-line"></i> Thống kê</a>
             <a href="EmployeeServlet"><i class="fa-solid fa-id-badge"></i> Nhân viên</a>
@@ -186,7 +186,7 @@
                     <p>Giao phòng và nhận trả phòng nhanh.</p>
                 </a>
 
-                <a href="ServiceServlet" class="card">
+                <a href="serviceManagementServlet" class="card">
                     <i class="fa-solid fa-utensils"></i>
                     <h3>Quản lý Dịch vụ</h3>
                     <p>Danh mục đồ ăn, thức uống, giặt ủi.</p>
