@@ -44,6 +44,11 @@
         <servlet-name>serviceManagementServlet</servlet-name>
         <servlet-class>com.mycompany.laptrinhweb.controller.serviceManagementServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>BookingServlet</servlet-name>
+        <servlet-class>com.mycompany.laptrinhweb.controller.BookingServlet</servlet-class>
+    </servlet>
+
 
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -89,6 +94,11 @@
         <servlet-name>serviceManagementServlet</servlet-name>
         <url-pattern>/serviceManagementServlet</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BookingServlet</servlet-name>
+        <url-pattern>/BookingServlet</url-pattern>
+    </servlet-mapping>
+
 
     <session-config>
         <session-timeout>
