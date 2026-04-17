@@ -76,16 +76,16 @@ public class CustomerDAO {
         }
     }
 
-    public void addCustomer(AddingCustomerDTO customer) throws Exception {
+    public void addCustomer(CustomerDTO customer) throws Exception {
         DBConnection db = new DBConnection();
         try (Connection conn = db.getConnection()) {
             String sql = "insert into khachhang (HoTen, CCCD, SDT, Email, DiaChi) values (?,?,?,?,?)";
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, customer.getHoTen());
-            ps.setString(5, customer.getDiaChi());
+            ps.setString(1, customer.getHoten());
+            ps.setString(5, customer.getDiachi());
             ps.setString(4, customer.getEmail());
-            ps.setString(2, customer.getCCCD());
-            ps.setString(3, customer.getSDT());
+            ps.setString(2, customer.getCccd());
+            ps.setString(3, customer.getSdt());
             ps.execute();
         }
     }
@@ -177,5 +177,23 @@ public class CustomerDAO {
             e.printStackTrace();
         }
         return false;
+    }
+    public int findCustomerIdByCCCD(String cccd){
+        
+        DBConnection db = new DBConnection();
+        try(Connection conn = db.getConnection()){
+            String sql="select * from khachhang where CCCD=?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, cccd);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()){
+                int makh = rs.getInt("MaKH");
+                return makh;
+            }
+        }
+        catch(Exception e){
+            return 0;
+        }
+        return 0;
     }
 }

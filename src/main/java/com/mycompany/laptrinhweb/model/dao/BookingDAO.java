@@ -6,9 +6,11 @@ package com.mycompany.laptrinhweb.model.dao;
 
 import com.mycompany.laptrinhweb.model.DBConnection;
 import com.mycompany.laptrinhweb.model.dto.BillDTO;
+import com.mycompany.laptrinhweb.model.dto.RoomBookingStatusDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 public class BookingDAO {
@@ -49,6 +51,27 @@ public class BookingDAO {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, madp);
             ps.execute();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+    public void addNewBooking(RoomBookingStatusDTO booking){
+        DBConnection db = new DBConnection();
+        try (Connection conn=db.getConnection()){
+            String sql="insert into datphong (MaKH,MaPhong,NgayNhanDuKien,NgayTraDuKien,TrangThai) values(?,?,?,?,?)";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setInt(1, booking.getMaKhachHang());
+            ps.setInt(2, booking.getMaPhong());
+            LocalDateTime ngayNhan = booking.getNgayNhanDuKien();
+            ps.setTimestamp(3, Timestamp.valueOf(ngayNhan));
+
+            LocalDateTime ngayTra = booking.getNgayTraDuKien();
+            ps.setTimestamp(4, Timestamp.valueOf(ngayTra));
+
+            ps.setString(5, booking.getTrangThai());
+
+            ps.executeUpdate();
         }
         catch(Exception e){
             e.printStackTrace();

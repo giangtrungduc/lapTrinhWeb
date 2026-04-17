@@ -4,23 +4,23 @@
  */
 package com.mycompany.laptrinhweb.controller;
 
-import com.mycompany.laptrinhweb.model.dao.CustomerDAO;
-import com.mycompany.laptrinhweb.model.dto.AddingCustomerDTO;
-import com.mycompany.laptrinhweb.model.dto.CustomerDTO;
+import com.mycompany.laptrinhweb.model.dao.RoomDAO;
+import com.mycompany.laptrinhweb.model.dto.RoomDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author DELL
  */
-public class AddCustomer extends HttpServlet {
+public class FindRoomCustomerServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -34,23 +34,27 @@ public class AddCustomer extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        CustomerDTO customer = new CustomerDTO();
-        customer.setHoten(request.getParameter("name"));
-        customer.setCccd((request.getParameter("identify")));
-        customer.setSdt((request.getParameter("phonenumber")));
-        customer.setEmail(request.getParameter("email"));
-        customer.setDiachi(request.getParameter("address"));
-        CustomerDAO customerDAO = new CustomerDAO();
-        try {
-            customerDAO.addCustomer(customer);
-            request.setAttribute("message", "successfully");
-        } catch (Exception ex) {
-            request.setAttribute("message", ex.getMessage());
-            System.out.println(ex.getMessage());
+        String soPhong = request.getParameter("soPhong");
+        String giaPhong = request.getParameter("giaPhong");
+        String tenLoaiPhong = request.getParameter("tenLoaiPhong");
+        String soNguoiToiDa = request.getParameter("soNguoiToiDa");
+        RoomDAO roomDAO = new RoomDAO();
+        List<RoomDTO> listRoom = new ArrayList<>();
+        float gia = (giaPhong == null || giaPhong.isEmpty()) ? 0 : Float.parseFloat(giaPhong);
+        int soNguoi = (soNguoiToiDa == null || soNguoiToiDa.isEmpty()) ? 0 : Integer.parseInt(soNguoiToiDa);
+        int sop = (soPhong == null || soPhong.isEmpty()) ? 0 : Integer.parseInt(soPhong);
+
+        if (tenLoaiPhong == null || tenLoaiPhong.trim().isEmpty()) {
+            tenLoaiPhong = null;
         }
-//        customerDAO.addCustomer(customer);
+
+        listRoom = roomDAO.searchRoomForCustomer(sop, gia, tenLoaiPhong, soNguoi);
+
         
-        request.getRequestDispatcher("add-customer-form.jsp").forward(request, response); 
+        HttpSession session = request.getSession();
+        session.setAttribute("listRoom", listRoom);
+
+        request.getRequestDispatcher("find-room-customer.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

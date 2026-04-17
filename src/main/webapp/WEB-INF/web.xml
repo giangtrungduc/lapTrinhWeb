@@ -60,6 +60,26 @@
         <servlet-name>LogoutServlet</servlet-name>
         <servlet-class>com.mycompany.laptrinhweb.controller.LogoutServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PhongInfoServlet</servlet-name>
+        <servlet-class>com.mycompany.laptrinhweb.controller.PhongInfoServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>FindRoomCustomerServlet</servlet-name>
+        <servlet-class>com.mycompany.laptrinhweb.controller.FindRoomCustomerServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BookingByCustomer</servlet-name>
+        <servlet-class>com.mycompany.laptrinhweb.controller.BookingByCustomer</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ChuyenThongTinPhongServlet</servlet-name>
+        <servlet-class>com.mycompany.laptrinhweb.controller.ChuyenThongTinPhongServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>BookingFormCustomerServlet</servlet-name>
+        <servlet-class>com.mycompany.laptrinhweb.controller.BookingFormCustomerServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -119,6 +139,26 @@
     <servlet-mapping>
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/LogoutServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PhongInfoServlet</servlet-name>
+        <url-pattern>/PhongInfoServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>FindRoomCustomerServlet</servlet-name>
+        <url-pattern>/FindRoomCustomerServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BookingByCustomer</servlet-name>
+        <url-pattern>/BookingByCustomer</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ChuyenThongTinPhongServlet</servlet-name>
+        <url-pattern>/ChuyenThongTinPhongServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BookingFormCustomerServlet</servlet-name>
+        <url-pattern>/BookingFormCustomerServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
