@@ -140,7 +140,7 @@
                 document.getElementById("chucVu").value = "";
                 document.getElementById("tenDangNhap").value = "";
                 document.getElementById("matKhauHash").value = "";
-            }
+            }     
         </script>
     </head>
     <body>

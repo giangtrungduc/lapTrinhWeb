@@ -147,7 +147,7 @@
             <a href="BookingServlet"><i class="fa-solid fa-calendar-check"></i> Đặt phòng</a>
             <a href="ServiceServlet"><i class="fa-solid fa-bell-concierge"></i> Dịch vụ</a>
             <a href="InvoiceServlet"><i class="fa-solid fa-file-invoice-dollar"></i> Hóa đơn</a>
-            <a href="ReportServlet"><i class="fa-solid fa-chart-line"></i> Thống kê</a>
+            <a href="RevenueDetailServlet"><i class="fa-solid fa-chart-line"></i> Thống kê</a>
             <a href="EmployeeServlet"><i class="fa-solid fa-id-badge"></i> Nhân viên</a>
         </div>
 
@@ -204,7 +204,7 @@
                     <p>Xử lý giao dịch và phương thức thanh toán.</p>
                 </a>
 
-                <a href="ReportServlet" class="card">
+                <a href="RevenueDetailServlet" class="card">
                     <i class="fa-solid fa-chart-pie"></i>
                     <h3>Thống kê doanh thu</h3>
                     <p>Báo cáo doanh số theo ngày/tháng.</p>

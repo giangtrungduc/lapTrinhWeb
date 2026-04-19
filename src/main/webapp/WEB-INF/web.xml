@@ -48,6 +48,14 @@
         <servlet-name>SaveInvoiceServlet</servlet-name>
         <servlet-class>com.mycompany.laptrinhweb.controller.SaveInvoiceServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RevenueDetailServlet</servlet-name>
+        <servlet-class>com.mycompany.laptrinhweb.controller.RevenueDetailServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RevenueTopDetailServlet</servlet-name>
+        <servlet-class>com.mycompany.laptrinhweb.controller.RevenueTopDetailServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -95,6 +103,14 @@
     <servlet-mapping>
         <servlet-name>SaveInvoiceServlet</servlet-name>
         <url-pattern>/SaveInvoiceServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RevenueDetailServlet</servlet-name>
+        <url-pattern>/RevenueDetailServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RevenueTopDetailServlet</servlet-name>
+        <url-pattern>/RevenueTopDetailServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>
