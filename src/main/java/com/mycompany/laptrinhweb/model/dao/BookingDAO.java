@@ -6,12 +6,15 @@ package com.mycompany.laptrinhweb.model.dao;
 
 import com.mycompany.laptrinhweb.model.DBConnection;
 import com.mycompany.laptrinhweb.model.dto.BillDTO;
+import com.mycompany.laptrinhweb.model.dto.BookingDTO;
 import com.mycompany.laptrinhweb.model.dto.RoomBookingStatusDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BookingDAO {
 
@@ -76,5 +79,336 @@ public class BookingDAO {
         catch(Exception e){
             e.printStackTrace();
         }
+    }
+    
+    public List<BookingDTO> listBooking(){
+        List<BookingDTO> list = new ArrayList<>();
+        
+        String sql = "SELECT MaDatPhong, MaKH, MaPhong, NgayDat, NgayNhanDuKien, NgayTraDuKien " +
+                 "FROM DatPhong " +
+                 "WHERE TrangThai = 'ChoXacNhan' " +
+                 "ORDER BY NgayDat ASC";
+        
+        try(Connection conn = new DBConnection().getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+            while(rs.next()){
+                BookingDTO dp = new BookingDTO();
+                dp.setMaDatPhong(rs.getInt("MaDatPhong"));
+                dp.setMaKH(rs.getInt("MaKH"));
+                dp.setMaPhong(rs.getInt("MaPhong"));
+                LocalDateTime ngayDat = rs.getTimestamp("NgayDat").toLocalDateTime();
+                LocalDateTime ngayNhanDuKien = rs.getTimestamp("NgayNhanDuKien").toLocalDateTime();
+                LocalDateTime ngayTraDuKien = rs.getTimestamp("NgayTraDuKien").toLocalDateTime();
+                dp.setNgayDat(ngayDat);
+                dp.setNgayNhanDuKien(ngayNhanDuKien);
+                dp.setNgayTraDuKien(ngayTraDuKien);
+                list.add(dp);
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public List<BookingDTO> listBookingByCheckIn(){
+        List<BookingDTO> list = new ArrayList<>();
+        
+        String sql = "SELECT MaDatPhong, MaKH, MaPhong, NgayDat, NgayNhanDuKien, NgayTraDuKien " +
+                 "FROM DatPhong " +
+                 "WHERE TrangThai = 'DaDat' " +
+                 "ORDER BY NgayDat ASC";
+        
+        try(Connection conn = new DBConnection().getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()) {
+            while(rs.next()){
+                BookingDTO dp = new BookingDTO();
+                dp.setMaDatPhong(rs.getInt("MaDatPhong"));
+                dp.setMaKH(rs.getInt("MaKH"));
+                dp.setMaPhong(rs.getInt("MaPhong"));
+                LocalDateTime ngayDat = rs.getTimestamp("NgayDat").toLocalDateTime();
+                LocalDateTime ngayNhanDuKien = rs.getTimestamp("NgayNhanDuKien").toLocalDateTime();
+                LocalDateTime ngayTraDuKien = rs.getTimestamp("NgayTraDuKien").toLocalDateTime();
+                dp.setNgayDat(ngayDat);
+                dp.setNgayNhanDuKien(ngayNhanDuKien);
+                dp.setNgayTraDuKien(ngayTraDuKien);
+                list.add(dp);
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public List<BookingDTO> searchBookedList(String keyword) {
+        List<BookingDTO> list = new ArrayList<>();
+
+        String sql = "SELECT dp.MaDatPhong, dp.MaKH, dp.MaPhong, dp.NgayDat, dp.NgayNhanDuKien, dp.NgayTraDuKien " +
+                     "FROM DatPhong dp " +
+                     "JOIN KhachHang kh ON dp.MaKH = kh.MaKH " +
+                     "WHERE dp.TrangThai = 'DaDat' " +
+                     "AND (kh.SDT LIKE ? OR kh.CCCD LIKE ?) " +
+                     "ORDER BY dp.NgayDat ASC";
+
+        try (Connection conn = new DBConnection().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, "%" + keyword + "%");
+            ps.setString(2, "%" + keyword + "%");
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    BookingDTO dp = new BookingDTO();
+                    dp.setMaDatPhong(rs.getInt("MaDatPhong"));
+                    dp.setMaKH(rs.getInt("MaKH"));
+                    dp.setMaPhong(rs.getInt("MaPhong"));
+                    LocalDateTime ngayDat = rs.getTimestamp("NgayDat").toLocalDateTime();
+                    LocalDateTime ngayNhanDuKien = rs.getTimestamp("NgayNhanDuKien").toLocalDateTime();
+                    LocalDateTime ngayTraDuKien = rs.getTimestamp("NgayTraDuKien").toLocalDateTime();
+                    dp.setNgayDat(ngayDat);
+                    dp.setNgayNhanDuKien(ngayNhanDuKien);
+                    dp.setNgayTraDuKien(ngayTraDuKien);
+                    list.add(dp);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+    public BookingDTO getBookingDTOByID(int id){
+        BookingDTO dp = new BookingDTO();
+        String sql = "SELECT dp.MaDatPhong, dp.MaKH, dp.MaPhong, dp.NgayDat, dp.NgayNhanDuKien, dp.NgayTraDuKien, " +
+                 "dp.TrangThai, dp.GhiChu, dp.GiaPhongTaiThoiDiemDat, " +
+                 "kh.HoTen AS TenKhachHang, kh.CCCD, kh.SDT AS SDTKhachHang, kh.Email, kh.DiaChi, " +
+                 "p.SoPhong, lp.TenLoaiPhong, lp.SoNguoiToiDa, lp.GiaCoBan, lp.MoTa " +
+                 "FROM DatPhong dp " +
+                 "JOIN KhachHang kh ON dp.MaKH = kh.MaKH " +
+                 "JOIN Phong p ON dp.MaPhong = p.MaPhong " +
+                 "JOIN LoaiPhong lp ON p.MaLoaiPhong = lp.MaLoaiPhong " +
+                 "WHERE dp.MaDatPhong = ? AND dp.TrangThai = 'ChoXacNhan'";
+        try(Connection conn = new DBConnection().getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            
+            ResultSet rs = ps.executeQuery();
+            
+            while(rs.next()){
+                dp.setMaDatPhong(rs.getInt("MaDatPhong"));
+                dp.setMaKH(rs.getInt("MaKH"));
+                dp.setMaPhong(rs.getInt("MaPhong"));
+                LocalDateTime ngayDat = rs.getTimestamp("NgayDat").toLocalDateTime();
+                LocalDateTime ngayNhanDuKien = rs.getTimestamp("NgayNhanDuKien").toLocalDateTime();
+                LocalDateTime ngayTraDuKien = rs.getTimestamp("NgayTraDuKien").toLocalDateTime();
+                dp.setNgayDat(ngayDat);
+                dp.setNgayNhanDuKien(ngayNhanDuKien);
+                dp.setNgayTraDuKien(ngayTraDuKien);
+                dp.setTrangThai(rs.getString("TrangThai"));
+                dp.setGhiChu(rs.getString("GhiChu"));
+                dp.setGiaPhongTaiThoiDiemDat(rs.getBigDecimal("GiaPhongTaiThoiDiemDat"));
+
+                dp.setTenKhachHang(rs.getString("TenKhachHang"));
+                dp.setCccd(rs.getString("CCCD"));
+                dp.setSdtKhachHang(rs.getString("SDTKhachHang"));
+                dp.setEmailKhachHang(rs.getString("Email"));
+                dp.setDiaChiKhachHang(rs.getString("DiaChi"));
+
+                dp.setSoPhong(rs.getInt("SoPhong"));
+                dp.setTenLoaiPhong(rs.getString("TenLoaiPhong"));
+                dp.setSoNguoiToiDa(rs.getInt("SoNguoiToiDa"));
+                dp.setGiaCoBan(rs.getDouble("GiaCoBan"));
+                dp.setMoTaLoaiPhong(rs.getString("MoTa"));
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dp;
+    }
+    public BookingDTO getBookingDTOByIDForCheckIn(int id){
+        BookingDTO dp = new BookingDTO();
+        String sql = "SELECT dp.MaDatPhong, dp.MaKH, dp.MaPhong, dp.NgayDat, dp.NgayNhanDuKien, dp.NgayTraDuKien, " +
+                 "dp.TrangThai, dp.GhiChu, dp.GiaPhongTaiThoiDiemDat, " +
+                 "kh.HoTen AS TenKhachHang, kh.CCCD, kh.SDT AS SDTKhachHang, kh.Email, kh.DiaChi, " +
+                 "p.SoPhong, lp.TenLoaiPhong, lp.SoNguoiToiDa, lp.GiaCoBan, lp.MoTa " +
+                 "FROM DatPhong dp " +
+                 "JOIN KhachHang kh ON dp.MaKH = kh.MaKH " +
+                 "JOIN Phong p ON dp.MaPhong = p.MaPhong " +
+                 "JOIN LoaiPhong lp ON p.MaLoaiPhong = lp.MaLoaiPhong " +
+                 "WHERE dp.MaDatPhong = ? AND dp.TrangThai = 'DaDat'";
+        try(Connection conn = new DBConnection().getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            
+            ResultSet rs = ps.executeQuery();
+            
+            while(rs.next()){
+                dp.setMaDatPhong(rs.getInt("MaDatPhong"));
+                dp.setMaKH(rs.getInt("MaKH"));
+                dp.setMaPhong(rs.getInt("MaPhong"));
+                LocalDateTime ngayDat = rs.getTimestamp("NgayDat").toLocalDateTime();
+                LocalDateTime ngayNhanDuKien = rs.getTimestamp("NgayNhanDuKien").toLocalDateTime();
+                LocalDateTime ngayTraDuKien = rs.getTimestamp("NgayTraDuKien").toLocalDateTime();
+                dp.setNgayDat(ngayDat);
+                dp.setNgayNhanDuKien(ngayNhanDuKien);
+                dp.setNgayTraDuKien(ngayTraDuKien);
+                dp.setTrangThai(rs.getString("TrangThai"));
+                dp.setGhiChu(rs.getString("GhiChu"));
+                dp.setGiaPhongTaiThoiDiemDat(rs.getBigDecimal("GiaPhongTaiThoiDiemDat"));
+
+                dp.setTenKhachHang(rs.getString("TenKhachHang"));
+                dp.setCccd(rs.getString("CCCD"));
+                dp.setSdtKhachHang(rs.getString("SDTKhachHang"));
+                dp.setEmailKhachHang(rs.getString("Email"));
+                dp.setDiaChiKhachHang(rs.getString("DiaChi"));
+
+                dp.setSoPhong(rs.getInt("SoPhong"));
+                dp.setTenLoaiPhong(rs.getString("TenLoaiPhong"));
+                dp.setSoNguoiToiDa(rs.getInt("SoNguoiToiDa"));
+                dp.setGiaCoBan(rs.getDouble("GiaCoBan"));
+                dp.setMoTaLoaiPhong(rs.getString("MoTa"));
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dp;
+    }
+    public BookingDTO getBookingDTOByIDForCheckOut(int id){
+        BookingDTO dp = new BookingDTO();
+        String sql = "SELECT dp.MaDatPhong, dp.MaKH, dp.MaPhong, dp.NgayDat, dp.NgayNhanDuKien, dp.NgayTraDuKien, " +
+                 "dp.TrangThai, dp.GhiChu, dp.GiaPhongTaiThoiDiemDat, " +
+                 "kh.HoTen AS TenKhachHang, kh.CCCD, kh.SDT AS SDTKhachHang, kh.Email, kh.DiaChi, " +
+                 "p.SoPhong, lp.TenLoaiPhong, lp.SoNguoiToiDa, lp.GiaCoBan, lp.MoTa " +
+                 "FROM DatPhong dp " +
+                 "JOIN KhachHang kh ON dp.MaKH = kh.MaKH " +
+                 "JOIN Phong p ON dp.MaPhong = p.MaPhong " +
+                 "JOIN LoaiPhong lp ON p.MaLoaiPhong = lp.MaLoaiPhong " +
+                 "WHERE dp.MaDatPhong = ? AND dp.TrangThai = 'DaNhanPhong'";
+        try(Connection conn = new DBConnection().getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            
+            ResultSet rs = ps.executeQuery();
+            
+            while(rs.next()){
+                dp.setMaDatPhong(rs.getInt("MaDatPhong"));
+                dp.setMaKH(rs.getInt("MaKH"));
+                dp.setMaPhong(rs.getInt("MaPhong"));
+                LocalDateTime ngayDat = rs.getTimestamp("NgayDat").toLocalDateTime();
+                LocalDateTime ngayNhanDuKien = rs.getTimestamp("NgayNhanDuKien").toLocalDateTime();
+                LocalDateTime ngayTraDuKien = rs.getTimestamp("NgayTraDuKien").toLocalDateTime();
+                dp.setNgayDat(ngayDat);
+                dp.setNgayNhanDuKien(ngayNhanDuKien);
+                dp.setNgayTraDuKien(ngayTraDuKien);
+                dp.setTrangThai(rs.getString("TrangThai"));
+                dp.setGhiChu(rs.getString("GhiChu"));
+                dp.setGiaPhongTaiThoiDiemDat(rs.getBigDecimal("GiaPhongTaiThoiDiemDat"));
+
+                dp.setTenKhachHang(rs.getString("TenKhachHang"));
+                dp.setCccd(rs.getString("CCCD"));
+                dp.setSdtKhachHang(rs.getString("SDTKhachHang"));
+                dp.setEmailKhachHang(rs.getString("Email"));
+                dp.setDiaChiKhachHang(rs.getString("DiaChi"));
+
+                dp.setSoPhong(rs.getInt("SoPhong"));
+                dp.setTenLoaiPhong(rs.getString("TenLoaiPhong"));
+                dp.setSoNguoiToiDa(rs.getInt("SoNguoiToiDa"));
+                dp.setGiaCoBan(rs.getDouble("GiaCoBan"));
+                dp.setMoTaLoaiPhong(rs.getString("MoTa"));
+            }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dp;
+    }
+    
+    public boolean updateTrangThaiDatPhong(int maDatPhong, String trangThai, int maNV) {
+        String sql = "UPDATE DatPhong SET TrangThai = ?, MaNV = ? " +
+                     "WHERE MaDatPhong = ? AND TrangThai = 'ChoXacNhan'";
+
+        try {
+            Connection con = new DBConnection().getConnection();
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, trangThai);
+            ps.setInt(2, maNV);
+            ps.setInt(3, maDatPhong);
+
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+    
+     public boolean checkInBooking(int maDatPhong, int maPhong, int maNV) {
+        Connection conn = null;
+        try {
+            conn = new DBConnection().getConnection();
+            conn.setAutoCommit(false);
+
+            String sql1 = "UPDATE DatPhong " +
+                          "SET TrangThai = 'DaNhanPhong', MaNV = ? " +
+                          "WHERE MaDatPhong = ? AND TrangThai = 'DaDat'";
+            PreparedStatement ps1 = conn.prepareStatement(sql1);
+            ps1.setInt(1, maNV);
+            ps1.setInt(2, maDatPhong);
+            int row1 = ps1.executeUpdate();
+
+            String sql2 = "UPDATE Phong " +
+                          "SET TrangThai = 'DangO' " +
+                          "WHERE MaPhong = ?";
+            PreparedStatement ps2 = conn.prepareStatement(sql2);
+            ps2.setInt(1, maPhong);
+            int row2 = ps2.executeUpdate();
+
+            if (row1 > 0 && row2 > 0) {
+                conn.commit();
+                return true;
+            } else {
+                conn.rollback();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            try {
+                if (conn != null) conn.rollback();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    public boolean cancelBookingForCheckIn(int maDatPhong, int maNV) {
+        String sql = "UPDATE DatPhong " +
+                     "SET TrangThai = 'DaHuy', MaNV = ? " +
+                     "WHERE MaDatPhong = ? AND TrangThai = 'DaDat'";
+
+        try (Connection conn = new DBConnection().getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, maNV);
+            ps.setInt(2, maDatPhong);
+
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 }

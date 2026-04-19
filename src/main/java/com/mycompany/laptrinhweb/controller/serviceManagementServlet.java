@@ -4,8 +4,8 @@
  */
 package com.mycompany.laptrinhweb.controller;
 
-import com.mycompany.laptrinhweb.model.dao.serviceDAO;
-import com.mycompany.laptrinhweb.model.dto.serviceDTO;
+import com.mycompany.laptrinhweb.model.dao.ServiceDAO;
+import com.mycompany.laptrinhweb.model.dto.ServiceDTO;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -21,7 +21,7 @@ import java.util.List;
  *
  * @author Admin
  */
-public class serviceManagementServlet extends HttpServlet {
+public class ServiceManagementServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,7 +35,7 @@ public class serviceManagementServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        serviceDAO svDAO = new serviceDAO();
+        ServiceDAO svDAO = new ServiceDAO();
         String action = request.getParameter("action");
         if (action == null) {
             action = "list";
@@ -46,12 +46,12 @@ public class serviceManagementServlet extends HttpServlet {
                 BigDecimal donGia = new BigDecimal(request.getParameter("donGia"));
                 String moTa = request.getParameter("moTa");
                 
-                serviceDTO sv1 = new serviceDTO();
+                ServiceDTO sv1 = new ServiceDTO();
                 sv1.setTenDV(tenDV);
                 sv1.setDonGia(donGia);
                 sv1.setMoTa(moTa);
                 svDAO.addService(sv1);
-                List<serviceDTO> list = svDAO.listService();
+                List<ServiceDTO> list = svDAO.listService();
                 request.setAttribute("listService", list);
                 break;
             }
@@ -60,26 +60,26 @@ public class serviceManagementServlet extends HttpServlet {
                 String tenDV = request.getParameter("tenDV");
                 BigDecimal donGia = new BigDecimal(request.getParameter("donGia"));
                 String moTa = request.getParameter("moTa");
-                serviceDTO sv1 = new serviceDTO();
+                ServiceDTO sv1 = new ServiceDTO();
                 sv1.setTenDV(tenDV);
                 sv1.setDonGia(donGia);
                 sv1.setMoTa(moTa);
                 sv1.setMaDV(maDV);
                 svDAO.updateService(sv1);
-                List<serviceDTO> list = svDAO.listService();
+                List<ServiceDTO> list = svDAO.listService();
                 request.setAttribute("listService", list);
                 break;
             }
             case "delete": {
                 Integer maDV = Integer.parseInt(request.getParameter("maDV"));
                 svDAO.deleteService(maDV);
-                List<serviceDTO> list = svDAO.listService();
+                List<ServiceDTO> list = svDAO.listService();
                 request.setAttribute("listService", list);
                 break;
             }
             case "search": {
                 String key = request.getParameter("search");
-                List<serviceDTO> list = svDAO.searchService(key);
+                List<ServiceDTO> list = svDAO.searchService(key);
                 request.setAttribute("listService", list);
                 HttpSession session = request.getSession();
                 session.setAttribute("keyword", key);
@@ -87,7 +87,7 @@ public class serviceManagementServlet extends HttpServlet {
             }
             
             default: {
-                List<serviceDTO> list = svDAO.listService();
+                List<ServiceDTO> list = svDAO.listService();
                 request.setAttribute("listService", list);
             }
         }

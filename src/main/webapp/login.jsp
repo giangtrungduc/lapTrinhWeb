@@ -92,6 +92,23 @@
             color: #777;
             font-size: 14px;
         }
+        
+        .btn-guest {
+            display: block;
+            width: 100%;
+            padding: 11px;
+            background: #6c757d;
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            font-size: 16px;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+
+        .btn-guest:hover {
+            background: #5a6268;
+        }
     </style>
 </head>
 <body>
@@ -113,6 +130,8 @@
                 </div>
 
                 <button type="submit" class="btn-login">Đăng nhập</button>
+                
+                <a href="BookingByCustomer" class="btn-guest">Vào với tư cách khách</a>
             </form>
 
             <div class="footer-text">

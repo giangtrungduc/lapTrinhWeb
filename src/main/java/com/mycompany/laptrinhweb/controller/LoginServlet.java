@@ -50,8 +50,14 @@ public class LoginServlet extends HttpServlet {
             // Lưu vào SESSION, không phải request
             session.setAttribute("user", user);
             session.setAttribute("MaNV", emp.getMaNV());
+            session.setAttribute("chucVu", emp.getChucVu());
+            String chucVu = emp.getChucVu();
             // Chuyển hướng (Redirect) thay vì Forward để tránh lỗi lặp lại request
-            response.sendRedirect("main.jsp");
+            if(chucVu.equalsIgnoreCase("Quan Ly")){
+                response.sendRedirect("main.jsp");
+            }else{
+                response.sendRedirect("main-employee.jsp");
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.List"%>
 <%@page import="com.mycompany.laptrinhweb.model.dto.BookingDTO"%>
+<%@page import="com.mycompany.laptrinhweb.model.dto.UsedServiceDTO"%>
 
 <%
     String user = (String) session.getAttribute("user");
@@ -9,8 +10,14 @@
         return;
     }
 
-    List<BookingDTO> dsDaDat = (List<BookingDTO>) request.getAttribute("dsDaDat");
+    List<BookingDTO> dsDangO = (List<BookingDTO>) request.getAttribute("dsDangO");
     BookingDTO chiTiet = (BookingDTO) request.getAttribute("chiTiet");
+    List<UsedServiceDTO> dsDichVuDaThem = (List<UsedServiceDTO>) request.getAttribute("dsDichVuDaThem");
+
+    Double tongTienPhong = (Double) request.getAttribute("tongTienPhong");
+    Double tongTienDV = (Double) request.getAttribute("tongTienDV");
+    Double tongThanhToan = (Double) request.getAttribute("tongThanhToan");
+
     String message = (String) request.getAttribute("message");
     String customerInformation = request.getAttribute("customerInformation") != null
             ? request.getAttribute("customerInformation").toString()
@@ -21,7 +28,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Check-in</title>
+        <title>Check-out</title>
         <style>
             .booking-layout {
                 width: 100%;
@@ -60,18 +67,25 @@
                 display: inline;
                 margin-right: 10px;
             }
+
+            .summary-box {
+                border: 1px solid #ccc;
+                padding: 10px;
+                margin-top: 10px;
+                background: #fafafa;
+            }
         </style>
     </head>
     <body>
-        <h1>Quy trình Check-in</h1>
+        <h1>Quy trình Check-out</h1>
 
         <p>Xin chào, <b><%= user %></b></p>
         <a href="main-employee.jsp">Quay về Dashboard</a>
 
         <hr>
 
-        <form action="CheckInServlet" method="get">
-            <label>Tìm kiếm khách hàng đã đặt phòng</label>
+        <form action="CheckOutServlet" method="get">
+            <label>Tìm kiếm khách hàng đang ở</label>
             <input type="text" name="customerInformation" placeholder="SĐT hoặc số CCCD..." value="<%= customerInformation %>">
             <button type="submit" name="action" value="search">Tìm khách hàng</button>
         </form>
@@ -86,13 +100,13 @@
         <table class="booking-layout">
             <tr>
                 <td width="45%" class="left-panel">
-                    <h2>Danh sách phiếu đặt đã xác nhận</h2>
+                    <h2>Danh sách phiếu đặt đang ở</h2>
 
                     <div class="scroll-box">
                         <%
-                            if (dsDaDat == null || dsDaDat.isEmpty()) {
+                            if (dsDangO == null || dsDangO.isEmpty()) {
                         %>
-                            <p>Không có phiếu đặt nào đang chờ check-in.</p>
+                            <p>Không có phiếu đặt nào đang ở để check-out.</p>
                         <%
                             } else {
                         %>
@@ -103,10 +117,11 @@
                                     <th>Mã phòng</th>
                                     <th>Ngày nhận</th>
                                     <th>Ngày trả</th>
-                                    <th>Xem</th>
+                                    <th>Thao tác</th>
                                 </tr>
+
                                 <%
-                                    for (BookingDTO dp : dsDaDat) {
+                                    for (BookingDTO dp : dsDangO) {
                                 %>
                                 <tr>
                                     <td><%= dp.getMaDatPhong() %></td>
@@ -115,7 +130,7 @@
                                     <td><%= dp.getNgayNhanDuKien() %></td>
                                     <td><%= dp.getNgayTraDuKien() %></td>
                                     <td>
-                                        <form action="CheckInServlet" method="get">
+                                        <form action="CheckOutServlet" method="get">
                                             <input type="hidden" name="action" value="view">
                                             <input type="hidden" name="maDatPhong" value="<%= dp.getMaDatPhong() %>">
                                             <input type="hidden" name="customerInformation" value="<%= customerInformation %>">
@@ -170,27 +185,63 @@
                             <p>Giá cơ bản: <%= chiTiet.getGiaCoBan() %></p>
                             <p>Mô tả: <%= chiTiet.getMoTaLoaiPhong() %></p>
 
+                            <hr>
+
+                            <h3>Dịch vụ đã sử dụng</h3>
+                            <%
+                                if (dsDichVuDaThem == null || dsDichVuDaThem.isEmpty()) {
+                            %>
+                                <p>Phiếu đặt này chưa có dịch vụ nào.</p>
+                            <%
+                                } else {
+                            %>
+                                <table border="1" cellpadding="5" cellspacing="0" width="100%">
+                                    <tr>
+                                        <th>Tên dịch vụ</th>
+                                        <th>Số lượng</th>
+                                        <th>Đơn giá</th>
+                                        <th>Thành tiền</th>
+                                        <th>Thời gian sử dụng</th>
+                                    </tr>
+                                    <%
+                                        for (UsedServiceDTO item : dsDichVuDaThem) {
+                                    %>
+                                    <tr>
+                                        <td><%= item.getTenDV() %></td>
+                                        <td><%= item.getSoLuong() %></td>
+                                        <td><%= item.getDonGia() %></td>
+                                        <td><%= item.getThanhTien() %></td>
+                                        <td><%= item.getThoiGianSuDung() %></td>
+                                    </tr>
+                                    <%
+                                        }
+                                    %>
+                                </table>
+                            <%
+                                }
+                            %>
+
+                            <div class="summary-box">
+                                <h3>Tổng kết hóa đơn tạm tính</h3>
+                                <p>Tiền phòng: <b><%= tongTienPhong != null ? tongTienPhong : 0 %></b></p>
+                                <p>Tiền dịch vụ: <b><%= tongTienDV != null ? tongTienDV : 0 %></b></p>
+                                <p>Tổng thanh toán: <b><%= tongThanhToan != null ? tongThanhToan : 0 %></b></p>
+                            </div>
+
                         <% } %>
                     </div>
 
                     <div class="action-box">
                         <% if (chiTiet != null) { %>
-                            <form action="CheckInServlet" method="post">
-                                <input type="hidden" name="action" value="checkin">
-                                <input type="hidden" name="maDatPhong" value="<%= chiTiet.getMaDatPhong() %>">
-                                <input type="hidden" name="maPhong" value="<%= chiTiet.getMaPhong() %>">
-                                <input type="hidden" name="customerInformation" value="<%= customerInformation %>">
-                                <input type="submit" value="Check-in">
-                            </form>
-
-                            <form action="CheckInServlet" method="post">
-                                <input type="hidden" name="action" value="cancel">
+                            <form action="CheckOutServlet" method="post">
+                                <input type="hidden" name="action" value="checkout">
                                 <input type="hidden" name="maDatPhong" value="<%= chiTiet.getMaDatPhong() %>">
                                 <input type="hidden" name="customerInformation" value="<%= customerInformation %>">
-                                <input type="submit" value="Hủy">
+                                <input type="submit" value="Check-out"
+                                       onclick="return confirm('Xác nhận check-out cho khách này?');">
                             </form>
 
-                            <form action="CheckInServlet" method="get">
+                            <form action="CheckOutServlet" method="get">
                                 <input type="hidden" name="action" value="close">
                                 <input type="hidden" name="customerInformation" value="<%= customerInformation %>">
                                 <input type="submit" value="Đóng">

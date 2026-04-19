@@ -2,17 +2,17 @@ package com.mycompany.laptrinhweb.controller;
 
 import com.mycompany.laptrinhweb.model.dao.BookingDAO;
 import com.mycompany.laptrinhweb.model.dto.BookingDTO;
+import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "CheckInServlet", urlPatterns = {"/CheckInServlet"})
-public class CheckInServlet extends HttpServlet {
+@WebServlet(name = "BookingConfirmationServlet", urlPatterns = {"/BookingConfirmationServlet"})
+public class BookingConfirmationServlet extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -34,49 +34,46 @@ public class CheckInServlet extends HttpServlet {
             action = "list";
         }
 
-        String customerInformation = request.getParameter("customerInformation");
         BookingDAO dao = new BookingDAO();
 
         if ("view".equals(action)) {
-            int maDatPhong = Integer.parseInt(request.getParameter("maDatPhong"));
-            BookingDTO chiTiet = dao.getBookingDTOByIDForCheckIn(maDatPhong);
-            request.setAttribute("chiTiet", chiTiet);
+            String maDatPhongRaw = request.getParameter("maDatPhong");
+            if (maDatPhongRaw != null && !maDatPhongRaw.isEmpty()) {
+                int maDatPhong = Integer.parseInt(maDatPhongRaw);
+                BookingDTO chiTiet = dao.getBookingDTOByID(maDatPhong);
+                if (chiTiet != null) {
+                    request.setAttribute("chiTiet", chiTiet);
+                } else {
+                    request.setAttribute("message", "Không tìm thấy phiếu đặt phòng.");
+                }
+            }
 
-        } else if ("checkin".equals(action)) {
+        } else if ("confirm".equals(action)) {
             int maDatPhong = Integer.parseInt(request.getParameter("maDatPhong"));
-            int maPhong = Integer.parseInt(request.getParameter("maPhong"));
-
-            boolean ok = dao.checkInBooking(maDatPhong, maPhong, maNV);
+            boolean ok = dao.updateTrangThaiDatPhong(maDatPhong, "DaDat", maNV);
             if (ok) {
-                request.setAttribute("message", "Check-in thành công.");
+                request.setAttribute("message", "Xác nhận phiếu đặt phòng thành công.");
             } else {
-                request.setAttribute("message", "Check-in thất bại.");
+                request.setAttribute("message", "Xác nhận thất bại.");
             }
 
         } else if ("cancel".equals(action)) {
             int maDatPhong = Integer.parseInt(request.getParameter("maDatPhong"));
-            boolean ok = dao.cancelBookingForCheckIn(maDatPhong, maNV);
-
+            boolean ok = dao.updateTrangThaiDatPhong(maDatPhong, "DaHuy", maNV);
             if (ok) {
-                request.setAttribute("message", "Hủy phiếu đặt thành công.");
+                request.setAttribute("message", "Hủy phiếu đặt phòng thành công.");
             } else {
-                request.setAttribute("message", "Hủy phiếu đặt thất bại.");
+                request.setAttribute("message", "Hủy thất bại.");
             }
 
         } else if ("close".equals(action)) {
-            // không làm gì, chỉ load lại danh sách
+            // không cần làm gì, chỉ load lại danh sách
         }
 
-        List<BookingDTO> dsDaDat;
-        if (customerInformation != null && !customerInformation.trim().isEmpty()) {
-            dsDaDat = dao.searchBookedList(customerInformation.trim());
-            request.setAttribute("customerInformation", customerInformation);
-        } else {
-            dsDaDat = dao.listBookingByCheckIn();
-        }
+        List<BookingDTO> dsChoXacNhan = dao.listBooking();
+        request.setAttribute("dsChoXacNhan", dsChoXacNhan);
 
-        request.setAttribute("dsDaDat", dsDaDat);
-        request.getRequestDispatcher("check-in.jsp").forward(request, response);
+        request.getRequestDispatcher("booking-confirmation.jsp").forward(request, response);
     }
 
     @Override

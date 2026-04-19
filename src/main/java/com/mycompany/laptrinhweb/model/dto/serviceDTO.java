@@ -8,18 +8,23 @@ import java.math.BigDecimal;
 
 /**
  *
- * @author Admin
+ * @author giang
  */
-public class serviceDTO {
-     private int maDV;
+public class ServiceDTO {
+    private int maDV;
     private String tenDV;
     private BigDecimal donGia;
     private String moTa;
 
-    public serviceDTO() {
+    public ServiceDTO() {
     }
 
-    
+    public ServiceDTO(int maDV, String tenDV, BigDecimal donGia, String moTa) {
+        this.maDV = maDV;
+        this.tenDV = tenDV;
+        this.donGia = donGia;
+        this.moTa = moTa;
+    }
 
     public int getMaDV() {
         return maDV;
@@ -45,7 +50,6 @@ public class serviceDTO {
         this.donGia = donGia;
     }
 
-   
     public String getMoTa() {
         return moTa;
     }
@@ -53,4 +57,5 @@ public class serviceDTO {
     public void setMoTa(String moTa) {
         this.moTa = moTa;
     }
+    
 }

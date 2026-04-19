@@ -6,7 +6,7 @@ package com.mycompany.laptrinhweb.model.dao;
 
 import com.mycompany.laptrinhweb.model.DBConnection;
 import com.mycompany.laptrinhweb.model.dto.EmployeeDTO;
-import com.mycompany.laptrinhweb.model.dto.serviceDTO;
+import com.mycompany.laptrinhweb.model.dto.ServiceDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,16 +17,16 @@ import java.util.List;
  *
  * @author Admin
  */
-public class serviceDAO {
+public class ServiceDAO {
 
-    public List<serviceDTO> listService() {
-        List<serviceDTO> list = new ArrayList<>();
+    public List<ServiceDTO> listService() {
+        List<ServiceDTO> list = new ArrayList<>();
         try (Connection conn = new DBConnection().getConnection()) {
             String sql = "select * from dichvu";
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                serviceDTO sv = new serviceDTO();
+                ServiceDTO sv = new ServiceDTO();
                 sv.setMaDV(rs.getInt("MaDV"));
                 sv.setTenDV(rs.getString("TenDV"));
                 sv.setDonGia(rs.getBigDecimal("DonGia"));
@@ -39,7 +39,7 @@ public class serviceDAO {
         return list;
     }
 
-    public boolean addService(serviceDTO sv) {
+    public boolean addService(ServiceDTO sv) {
         try (Connection conn = new DBConnection().getConnection()) {
             String sql = "insert into  dichvu(TenDV,DonGia,MoTa) values(?,?,?)";
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -54,7 +54,7 @@ public class serviceDAO {
         return false;
     }
 
-    public boolean updateService(serviceDTO sv) {
+    public boolean updateService(ServiceDTO sv) {
         try (Connection con = new DBConnection().getConnection()) {
             String sql = "update dichvu set TenDV=?,DonGia=?,MoTa=? where MaDV=?";
             PreparedStatement ps = con.prepareStatement(sql);
@@ -83,8 +83,8 @@ public class serviceDAO {
         return false;
     }
 
-    public List<serviceDTO> searchService(String key) {
-        List<serviceDTO> list = new ArrayList<>();
+    public List<ServiceDTO> searchService(String key) {
+        List<ServiceDTO> list = new ArrayList<>();
         String sql = "SELECT * FROM dichvu WHERE CAST(MaDV AS CHAR) LIKE ? OR TenDV LIKE ?";
         try (Connection con = new DBConnection().getConnection()) {
             PreparedStatement ps = con.prepareStatement(sql);
@@ -92,7 +92,7 @@ public class serviceDAO {
             ps.setString(2, "%" + key + "%");
             try(ResultSet rs = ps.executeQuery()){
                 while(rs.next()){
-                    serviceDTO sv =new serviceDTO();
+                    ServiceDTO sv =new ServiceDTO();
                     sv.setMaDV(rs.getInt("MaDV"));
                     sv.setTenDV(rs.getString("TenDV"));
                     sv.setDonGia(rs.getBigDecimal("DonGia"));

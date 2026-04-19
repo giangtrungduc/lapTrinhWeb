@@ -53,16 +53,12 @@
         <servlet-class>com.mycompany.laptrinhweb.controller.SaveInvoiceServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>serviceManagementServlet</servlet-name>
-        <servlet-class>com.mycompany.laptrinhweb.controller.serviceManagementServlet</servlet-class>
+        <servlet-name>ServiceManagementServlet</servlet-name>
+        <servlet-class>com.mycompany.laptrinhweb.controller.ServiceManagementServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LogoutServlet</servlet-name>
         <servlet-class>com.mycompany.laptrinhweb.controller.LogoutServlet</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>PhongInfoServlet</servlet-name>
-        <servlet-class>com.mycompany.laptrinhweb.controller.PhongInfoServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>FindRoomCustomerServlet</servlet-name>
@@ -73,12 +69,28 @@
         <servlet-class>com.mycompany.laptrinhweb.controller.BookingByCustomer</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>ChuyenThongTinPhongServlet</servlet-name>
-        <servlet-class>com.mycompany.laptrinhweb.controller.ChuyenThongTinPhongServlet</servlet-class>
+        <servlet-name>BookingConfirmationServlet</servlet-name>
+        <servlet-class>com.mycompany.laptrinhweb.controller.BookingConfirmationServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>BookingFormCustomerServlet</servlet-name>
-        <servlet-class>com.mycompany.laptrinhweb.controller.BookingFormCustomerServlet</servlet-class>
+        <servlet-name>RevenueDetailServlet</servlet-name>
+        <servlet-class>com.mycompany.laptrinhweb.controller.RevenueDetailServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>RevenueTopDetailServlet</servlet-name>
+        <servlet-class>com.mycompany.laptrinhweb.controller.RevenueTopDetailServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CheckOutServlet</servlet-name>
+        <servlet-class>com.mycompany.laptrinhweb.controller.CheckOutServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>PaymentServlet</servlet-name>
+        <servlet-class>com.mycompany.laptrinhweb.controller.PaymentServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ServiceServlet</servlet-name>
+        <servlet-class>com.mycompany.laptrinhweb.controller.ServiceServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
@@ -133,16 +145,12 @@
         <url-pattern>/SaveInvoiceServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>serviceManagementServlet</servlet-name>
-        <url-pattern>/serviceManagementServlet</url-pattern>
+        <servlet-name>ServiceManagementServlet</servlet-name>
+        <url-pattern>/ServiceManagementServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LogoutServlet</servlet-name>
         <url-pattern>/LogoutServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>PhongInfoServlet</servlet-name>
-        <url-pattern>/PhongInfoServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>FindRoomCustomerServlet</servlet-name>
@@ -153,12 +161,28 @@
         <url-pattern>/BookingByCustomer</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>ChuyenThongTinPhongServlet</servlet-name>
-        <url-pattern>/ChuyenThongTinPhongServlet</url-pattern>
+        <servlet-name>BookingConfirmationServlet</servlet-name>
+        <url-pattern>/BookingConfirmationServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>BookingFormCustomerServlet</servlet-name>
-        <url-pattern>/BookingFormCustomerServlet</url-pattern>
+        <servlet-name>CheckOutServlet</servlet-name>
+        <url-pattern>/CheckOutServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PaymentServlet</servlet-name>
+        <url-pattern>/PaymentServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ServiceServlet</servlet-name>
+        <url-pattern>/ServiceServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RevenueDetailServlet</servlet-name>
+        <url-pattern>/RevenueDetailServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RevenueTopDetailServlet</servlet-name>
+        <url-pattern>/RevenueTopDetailServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>

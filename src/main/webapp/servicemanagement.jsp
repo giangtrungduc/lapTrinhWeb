@@ -5,10 +5,10 @@
 --%>
 
 <%@page import="java.util.List"%>
-<%@page import="com.mycompany.laptrinhweb.model.dto.serviceDTO"%>
+<%@page import="com.mycompany.laptrinhweb.model.dto.ServiceDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%
-    List<serviceDTO> list = (List<serviceDTO>) request.getAttribute("listService");
+    List<ServiceDTO> list = (List<ServiceDTO>) request.getAttribute("listService");
     String keyword = (String) session.getAttribute("keyword");
     if (keyword == null) {
         keyword = "";
@@ -176,7 +176,7 @@
             <h1>Quản Lý Dịch Vụ</h1>
 
             <div class="form-box">
-                <form action="serviceManagementServlet" method="post">
+                <form action="ServiceManagementServlet" method="post">
                     <div class="form-row">
                         <label>Mã dịch vụ:</label>
                         <input type="text" id="maDV" name="maDV" readonly>
@@ -200,7 +200,7 @@
                     <div class="button-group">
                         <button type="submit" name="action" value="add">Thêm</button>
                         <button type="submit" name="action" value="update">Sửa</button>
-                        <a href="serviceManagementServlet" class="btn-link btn-reset">Làm mới</a>
+                        <a href="ServiceManagementServlet" class="btn-link btn-reset">Làm mới</a>
                         <button type="button" class="btn-reset" onclick="resetForm()">Xóa form</button>
                     </div>
 
@@ -225,7 +225,7 @@
                 <tbody>
                     <%
                         if (list != null && !list.isEmpty()) {
-                            for (serviceDTO dv : list) {
+                            for (ServiceDTO dv : list) {
                     %>
                     <tr onclick="fillForm('<%= dv.getMaDV()%>', '<%= dv.getTenDV()%>', '<%= dv.getDonGia()%>', '<%= dv.getMoTa()%>')">
                         <td><%= dv.getMaDV()%></td>
