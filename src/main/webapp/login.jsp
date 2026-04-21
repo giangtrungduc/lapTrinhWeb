@@ -1,141 +1,87 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%
-    String error=(String) request.getAttribute("failLogin");
-    if (error==null) error="";
+    String error = (String) request.getAttribute("failLogin");
+    if (error == null) error = "";
 %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Đăng nhập hệ thống</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            background: #f2f4f8;
-        }
-
-        .container {
-            width: 100%;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .login-box {
-            width: 380px;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-        .login-box h2 {
-            text-align: center;
-            margin-bottom: 25px;
-            color: #333;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: bold;
-            color: #444;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            outline: none;
-        }
-
-        .form-group input:focus {
-            border-color: #4a90e2;
-        }
-
-        .btn-login {
-            width: 100%;
-            padding: 11px;
-            background: #4a90e2;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .btn-login:hover {
-            background: #357bd8;
-        }
-
-        .error {
-            color: red;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-
-        .footer-text {
-            text-align: center;
-            margin-top: 15px;
-            color: #777;
-            font-size: 14px;
-        }
-        
-        .btn-guest {
-            display: block;
-            width: 100%;
-            padding: 11px;
-            background: #6c757d;
-            color: white;
-            text-align: center;
-            border-radius: 6px;
-            font-size: 16px;
-            text-decoration: none;
-            margin-top: 10px;
-        }
-
-        .btn-guest:hover {
-            background: #5a6268;
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/binance-style.css">
 </head>
 <body>
-    <div class="container">
-        <div class="login-box">
-            <h2>Đăng nhập hệ thống</h2>
-            <div style="color:red;">
-                <%=error%>
+    <div class="bn-auth-shell">
+        <div class="bn-form-card">
+            <div class="bn-form-card__header">
+                <div class="bn-form-card__badge">
+                    <i class="fa-solid fa-hotel"></i>
+                </div>
+                <h1 class="bn-form-card__title">Đăng nhập hệ thống</h1>
+                <p class="bn-form-card__subtitle">
+                    Truy cập khu vực quản trị khách sạn với tài khoản của bạn
+                </p>
             </div>
-            <form action="LoginServlet" method="post">
-                <div class="form-group">
-                    <label for="username">Tên đăng nhập</label>
-                    <input type="text" id="username" name="username" required>
+
+            <% if (!error.trim().isEmpty()) { %>
+            <div class="bn-alert bn-alert--error" style="margin-bottom: 20px;">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span><%= error %></span>
+            </div>
+            <% } %>
+
+            <form action="LoginServlet" method="post" class="bn-form">
+                <div class="bn-field">
+                    <label class="bn-label" for="username">
+                        <i class="fa-solid fa-user"></i>
+                        Tên đăng nhập
+                    </label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        class="bn-input"
+                        placeholder="Nhập tên đăng nhập"
+                        autocomplete="username"
+                        required>
                 </div>
 
-                <div class="form-group">
-                    <label for="password">Mật khẩu</label>
-                    <input type="password" id="password" name="password" required>
+                <div class="bn-field">
+                    <label class="bn-label" for="password">
+                        <i class="fa-solid fa-lock"></i>
+                        Mật khẩu
+                    </label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        class="bn-input"
+                        placeholder="Nhập mật khẩu"
+                        autocomplete="current-password"
+                        required>
                 </div>
 
-                <button type="submit" class="btn-login">Đăng nhập</button>
-                
-                <a href="BookingByCustomer" class="btn-guest">Vào với tư cách khách</a>
+                <div class="bn-form__actions" style="border-top: none; margin-top: 0; padding-top: 8px; flex-direction: column;">
+                    <button type="submit" class="bn-btn bn-btn--primary bn-btn--block">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        Đăng nhập
+                    </button>
+
+                    <a href="BookingByCustomer" class="bn-btn bn-btn--outline bn-btn--block" style="text-align: center;">
+                        <i class="fa-solid fa-user-check"></i>
+                        Vào với tư cách khách
+                    </a>
+                </div>
             </form>
 
-            <div class="footer-text">
-                Hệ thống quản lý khách sạn
+            <div class="bn-note" style="margin-top: 20px;">
+                <i class="fa-solid fa-shield-halved"></i>
+                Hệ thống quản lý khách sạn · Giao diện nội bộ dành cho nhân viên và quản trị viên
             </div>
         </div>
     </div>

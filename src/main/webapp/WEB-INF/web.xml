@@ -41,10 +41,6 @@
         <servlet-class>com.mycompany.laptrinhweb.controller.InvoiceServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>HoaDonServlet</servlet-name>
-        <servlet-class>com.mycompany.laptrinhweb.controller.HoaDonServlet</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>RoomServlet</servlet-name>
         <servlet-class>com.mycompany.laptrinhweb.controller.RoomServlet</servlet-class>
     </servlet>
@@ -92,6 +88,10 @@
         <servlet-name>ServiceServlet</servlet-name>
         <servlet-class>com.mycompany.laptrinhweb.controller.ServiceServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>BookingByStaff</servlet-name>
+        <servlet-class>com.mycompany.laptrinhweb.controller.BookingByStaff</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoginServlet</servlet-name>
         <url-pattern>/LoginServlet</url-pattern>
@@ -131,10 +131,6 @@
     <servlet-mapping>
         <servlet-name>InvoiceServlet</servlet-name>
         <url-pattern>/InvoiceServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>HoaDonServlet</servlet-name>
-        <url-pattern>/HoaDonServlet</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>RoomServlet</servlet-name>
@@ -183,6 +179,10 @@
     <servlet-mapping>
         <servlet-name>RevenueTopDetailServlet</servlet-name>
         <url-pattern>/RevenueTopDetailServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>BookingByStaff</servlet-name>
+        <url-pattern>/BookingByStaff</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>30</session-timeout>

@@ -16,14 +16,26 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
-public class BookingByCustomer extends HttpServlet {
+public class BookingByStaff extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
         response.setContentType("text/html;charset=UTF-8");
+        
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("user") == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
 
+        Integer maNV = (Integer) session.getAttribute("MaNV");
+        if (maNV == null) {
+            response.sendRedirect("login.jsp");
+            return;
+        }
         String action = request.getParameter("action");
         if (action == null) action = "list";
 
@@ -36,7 +48,7 @@ public class BookingByCustomer extends HttpServlet {
                 List<RoomDTO> roomList = roomDAO.listRoom();
                 request.setAttribute("roomList", roomList);
                 request.setAttribute("message", request.getParameter("message"));
-                request.getRequestDispatcher("find-room-customer.jsp").forward(request, response);
+                request.getRequestDispatcher("find-room-staff.jsp").forward(request, response);
                 break;
             }
 
@@ -47,7 +59,7 @@ public class BookingByCustomer extends HttpServlet {
 
                 // Không cho đặt phòng bảo trì
                 if (room == null || room.getTrangthai() == RoomStatus.BaoTri) {
-                    response.sendRedirect("BookingByCustomer?action=list");
+                    response.sendRedirect("BookingByStaff?action=list");
                     return;
                 }
 
@@ -55,7 +67,7 @@ public class BookingByCustomer extends HttpServlet {
                 List<RoomBookingStatusDTO> existingBookings = roomDAO.getRoomBookingStatusByRoomId(maPhong);
                 request.setAttribute("room", room);
                 request.setAttribute("existingBookings", existingBookings);
-                request.getRequestDispatcher("book-room-customer.jsp").forward(request, response);
+                request.getRequestDispatcher("book-room-staff.jsp").forward(request, response);
                 break;
             }
 
@@ -76,7 +88,7 @@ public class BookingByCustomer extends HttpServlet {
                 } catch (DateTimeParseException e) {
                     request.setAttribute("error", "Định dạng ngày không hợp lệ. Vui lòng chọn lại.");
                     prepareFormAgain(request, roomDAO, maPhong);
-                    request.getRequestDispatcher("book-room-customer.jsp").forward(request, response);
+                    request.getRequestDispatcher("book-room-staff.jsp").forward(request, response);
                     return;
                 }
 
@@ -84,7 +96,7 @@ public class BookingByCustomer extends HttpServlet {
                 if (!ngayTra.isAfter(ngayNhan)) {
                     request.setAttribute("error", "Ngày trả phải sau ngày nhận.");
                     prepareFormAgain(request, roomDAO, maPhong);
-                    request.getRequestDispatcher("book-room-customer.jsp").forward(request, response);
+                    request.getRequestDispatcher("book-room-staff.jsp").forward(request, response);
                     return;
                 }
 
@@ -98,7 +110,7 @@ public class BookingByCustomer extends HttpServlet {
                             request.setAttribute("error",
                                 "Phòng đã có người đặt từ " + start + " đến " + end + ". Vui lòng chọn ngày khác.");
                             prepareFormAgain(request, roomDAO, maPhong);
-                            request.getRequestDispatcher("book-room-customer.jsp").forward(request, response);
+                            request.getRequestDispatcher("book-room-staff.jsp").forward(request, response);
                             return;
                         }
                     }
@@ -128,17 +140,17 @@ public class BookingByCustomer extends HttpServlet {
                 newBooking.setMaKhachHang(maKH);
                 newBooking.setNgayNhanDuKien(ngayNhan);
                 newBooking.setNgayTraDuKien(ngayTra);
-                newBooking.setTrangThai("ChoXacNhan");
+                newBooking.setTrangThai("DaDat");
 
                 BookingDAO bookingDAO = new BookingDAO();
                 bookingDAO.addNewBooking(newBooking);
 
-                response.sendRedirect("BookingByCustomer?action=list&message=Đặt+phòng+thành+công!");
+                response.sendRedirect("BookingByStaff?action=list&message=Đặt+phòng+thành+công!");
                 break;
             }
 
             default:
-                response.sendRedirect("BookingByCustomer?action=list");
+                response.sendRedirect("BookingByStaff?action=list");
                 break;
         }
     }

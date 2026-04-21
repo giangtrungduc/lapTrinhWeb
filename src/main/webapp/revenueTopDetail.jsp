@@ -5,129 +5,85 @@
     String type = request.getAttribute("type") != null ? request.getAttribute("type").toString() : "";
     String thang = request.getAttribute("thang") != null ? request.getAttribute("thang").toString() : "";
     String nam = request.getAttribute("nam") != null ? request.getAttribute("nam").toString() : "";
+    boolean isRoom = "room".equals(type);
 %>
 <!DOCTYPE html>
-<html>
+<html lang="vi">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Chi tiết doanh thu</title>
-
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                background-color: #f5f7fa;
-                margin: 0;
-                padding: 30px;
-                color: #333;
-            }
-
-            .container {
-                max-width: 800px;
-                margin: 0 auto;
-                background: #ffffff;
-                border: 1px solid #dbe3ec;
-                border-radius: 12px;
-                padding: 24px;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-            }
-
-            h2 {
-                margin-top: 0;
-                margin-bottom: 20px;
-                color: #1f3b5b;
-                border-bottom: 2px solid #e6eef7;
-                padding-bottom: 10px;
-            }
-
-            .detail-table {
-                width: 100%;
-                border-collapse: collapse;
-                background: #fff;
-                margin-bottom: 20px;
-            }
-
-            .detail-table td {
-                border: 1px solid #d6e0ea;
-                padding: 12px;
-            }
-
-            .detail-table tr:nth-child(odd) td {
-                background: #f8fbff;
-            }
-
-            .label-cell {
-                width: 30%;
-                font-weight: bold;
-                color: #1f3b5b;
-                background: #eef5fc;
-            }
-
-            .value-cell {
-                color: #333;
-            }
-
-            .empty-box {
-                border: 1px solid #d6e0ea;
-                background: #fff8f8;
-                color: #a33;
-                padding: 14px;
-                border-radius: 8px;
-                margin-bottom: 20px;
-            }
-
-            .back-link {
-                display: inline-block;
-                padding: 10px 16px;
-                border: 1px solid #b9c7d6;
-                border-radius: 8px;
-                background: #eaf2fb;
-                color: #0b57d0;
-                text-decoration: none;
-                font-weight: bold;
-            }
-
-            .back-link:hover {
-                background: #dcecff;
-                text-decoration: none;
-            }
-        </style>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="assets/css/binance-style.css">
     </head>
     <body>
-        <div class="container">
-            <h2><%= "room".equals(type) ? "Chi tiết phòng" : "Chi tiết dịch vụ" %></h2>
+        <div class="bn-auth-shell">
+            <div class="bn-form-card bn-form-card--wide">
 
-            <%
-                if (detail != null) {
-            %>
-            <table class="detail-table">
-                <tr>
-                    <td class="label-cell">Tên</td>
-                    <td class="value-cell"><%= detail.getTen() %></td>
-                </tr>
-                <tr>
-                    <td class="label-cell">Doanh thu</td>
-                    <td class="value-cell"><%= detail.getDoanhThu() %></td>
-                </tr>
-                <tr>
-                    <td class="label-cell">Số lượng / số lượt</td>
-                    <td class="value-cell"><%= detail.getSoLuong() %></td>
-                </tr>
-                <tr>
-                    <td class="label-cell">Ghi chú</td>
-                    <td class="value-cell"><%= detail.getGhiChu() %></td>
-                </tr>
-            </table>
-            <%
-                } else {
-            %>
-            <div class="empty-box">Không có dữ liệu chi tiết</div>
-            <%
-                }
-            %>
+                <div class="bn-form-card__header">
+                    <div class="bn-form-card__badge">
+                        <i class="fa-solid fa-<%= isRoom ? "bed" : "concierge-bell" %>"></i>
+                    </div>
+                    <h1 class="bn-form-card__title">
+                        <%= isRoom ? "Chi tiết phòng" : "Chi tiết dịch vụ" %>
+                    </h1>
+                    <p class="bn-form-card__subtitle">
+                        <% if (!thang.isEmpty() || !nam.isEmpty()) { %>
+                            Thống kê
+                            <% if (!thang.isEmpty()) { %>tháng <strong style="color: var(--bn-text-primary);"><%= thang %></strong><% } %>
+                            <% if (!nam.isEmpty()) { %> năm <strong style="color: var(--bn-text-primary);"><%= nam %></strong><% } %>
+                        <% } else { %>
+                            Thông tin doanh thu chi tiết
+                        <% } %>
+                    </p>
+                </div>
 
-            <a class="back-link" href="RevenueDetailServlet?thang=<%= thang %>&nam=<%= nam %>">
-                Quay lại trang doanh thu
-            </a>
+                <% if (detail != null) { %>
+
+                <!-- HIGHLIGHT VALUE -->
+                <div class="bn-invoice__grand" style="margin-bottom: 20px;">
+                    <span class="bn-invoice__grand-label">Doanh thu</span>
+                    <span class="bn-invoice__grand-value"><%= detail.getDoanhThu() %></span>
+                </div>
+
+                <!-- DETAIL LIST -->
+                <div class="bn-detail-section">
+                    <div class="bn-detail-row">
+                        <span class="bn-detail-row__label">Tên</span>
+                        <span class="bn-detail-row__value"><strong><%= detail.getTen() %></strong></span>
+                    </div>
+                    <div class="bn-detail-row">
+                        <span class="bn-detail-row__label">Số lượng / Số lượt</span>
+                        <span class="bn-detail-row__value num"><%= detail.getSoLuong() %></span>
+                    </div>
+                    <div class="bn-detail-row">
+                        <span class="bn-detail-row__label">Ghi chú</span>
+                        <span class="bn-detail-row__value">
+                            <%= detail.getGhiChu() != null && !detail.getGhiChu().isEmpty() ? detail.getGhiChu() : "<span class=\"muted\">—</span>" %>
+                        </span>
+                    </div>
+                </div>
+
+                <% } else { %>
+
+                <div class="bn-alert bn-alert--warning">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span>Không có dữ liệu chi tiết</span>
+                </div>
+
+                <% } %>
+
+                <div class="bn-form__actions bn-form__actions--right">
+                    <a href="RevenueDetailServlet?thang=<%= thang %>&nam=<%= nam %>" class="bn-btn bn-btn--primary">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        Quay lại trang doanh thu
+                    </a>
+                </div>
+
+            </div>
         </div>
     </body>
 </html>

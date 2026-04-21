@@ -4,418 +4,296 @@
 <%@page import="com.mycompany.laptrinhweb.model.dto.TopRoomDTO"%>
 <%@page import="com.mycompany.laptrinhweb.model.dto.TopServiceDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
 <%
-    // =========================
-    // Dữ liệu cũ của trang doanh thu
-    // =========================
     String tuNgay = request.getAttribute("tuNgay") != null ? request.getAttribute("tuNgay").toString() : "";
     String denNgay = request.getAttribute("denNgay") != null ? request.getAttribute("denNgay").toString() : "";
     String thang = request.getAttribute("thang") != null ? request.getAttribute("thang").toString() : "";
     String nam = request.getAttribute("nam") != null ? request.getAttribute("nam").toString() : "";
 
     BigDecimal tongDoanhThu = request.getAttribute("tongDoanhThu") != null
-            ? (BigDecimal) request.getAttribute("tongDoanhThu")
-            : BigDecimal.ZERO;
-
+            ? (BigDecimal) request.getAttribute("tongDoanhThu") : BigDecimal.ZERO;
     BigDecimal doanhThuPhong = request.getAttribute("doanhThuPhong") != null
-            ? (BigDecimal) request.getAttribute("doanhThuPhong")
-            : BigDecimal.ZERO;
-
+            ? (BigDecimal) request.getAttribute("doanhThuPhong") : BigDecimal.ZERO;
     BigDecimal doanhThuDichVu = request.getAttribute("doanhThuDichVu") != null
-            ? (BigDecimal) request.getAttribute("doanhThuDichVu")
-            : BigDecimal.ZERO;
+            ? (BigDecimal) request.getAttribute("doanhThuDichVu") : BigDecimal.ZERO;
 
     List<RevenueDetailDTO> hoaDonList = (List<RevenueDetailDTO>) request.getAttribute("hoaDonList");
-
-    // =========================
-    // Dữ liệu mới: top 3 phòng / top 3 dịch vụ
-    // =========================
     List<TopRoomDTO> top3Phong = (List<TopRoomDTO>) request.getAttribute("top3Phong");
     List<TopServiceDTO> top3DichVu = (List<TopServiceDTO>) request.getAttribute("top3DichVu");
 
-    // =========================
-    // Thông báo từ server
-    // Ghi chú:
-    // Dùng để hiển thị thông báo kiểu:
-    // "Hệ thống đã ưu tiên lọc theo Từ ngày - Đến ngày, nên Tháng/Năm đã được bỏ qua."
-    // =========================
     String infoMessage = request.getAttribute("infoMessage") != null
-            ? request.getAttribute("infoMessage").toString()
-            : "";
+            ? request.getAttribute("infoMessage").toString() : "";
 %>
-
 <!DOCTYPE html>
-<html>
+<html lang="vi">
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Thống kê doanh thu</title>
-
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                background-color: #f5f7fa;
-                margin: 0;
-                padding: 20px;
-                color: #333;
-            }
-
-            h1, h2, h3 {
-                margin-top: 0;
-                color: #1f3b5b;
-            }
-
-            a {
-                text-decoration: none;
-                color: #0b57d0;
-            }
-
-            a:hover {
-                text-decoration: underline;
-            }
-
-            .page-table {
-                width: 100%;
-                border-collapse: separate;
-                border-spacing: 16px 0;
-            }
-
-            .left-panel,
-            .right-panel {
-                vertical-align: top;
-                background: #ffffff;
-                border: 1px solid #dbe3ec;
-                border-radius: 10px;
-                padding: 16px;
-            }
-
-            .left-panel {
-                width: 75%;
-            }
-
-            .right-panel {
-                width: 25%;
-            }
-
-            .top-link {
-                margin-bottom: 16px;
-                display: inline-block;
-                font-weight: bold;
-            }
-
-            .filter-form {
-                background: #f8fbff;
-                border: 1px solid #d6e4f0;
-                padding: 14px;
-                border-radius: 8px;
-                margin-bottom: 12px;
-            }
-
-            .filter-form label {
-                font-weight: bold;
-                margin-right: 6px;
-            }
-
-            .filter-form input,
-            .filter-form select {
-                padding: 6px 8px;
-                margin-right: 10px;
-                margin-bottom: 8px;
-                border: 1px solid #c8d4e0;
-                border-radius: 6px;
-            }
-
-            .filter-form button {
-                padding: 7px 14px;
-                border: 1px solid #b9c7d6;
-                border-radius: 6px;
-                background: #eaf2fb;
-                cursor: pointer;
-                font-weight: bold;
-                margin-right: 6px;
-            }
-
-            .filter-form button:hover {
-                background: #dcecff;
-            }
-
-            .info-box {
-                margin-top: 0;
-                margin-bottom: 16px;
-                padding: 12px 14px;
-                border: 1px solid #b7d7f7;
-                background: #eef7ff;
-                color: #0b4f8a;
-                border-radius: 8px;
-                font-weight: bold;
-            }
-
-            .summary-table,
-            .detail-table {
-                width: 100%;
-                border-collapse: collapse;
-                background: #fff;
-            }
-
-            .summary-table td,
-            .detail-table th,
-            .detail-table td {
-                border: 1px solid #d6e0ea;
-                padding: 10px;
-            }
-
-            .summary-table {
-                margin-bottom: 20px;
-            }
-
-            .summary-table td {
-                text-align: center;
-                background: #f9fcff;
-            }
-
-            .summary-title {
-                display: block;
-                font-weight: bold;
-                margin-bottom: 6px;
-                color: #234;
-            }
-
-            .summary-value {
-                font-size: 18px;
-                font-weight: bold;
-                color: #0d4f8b;
-            }
-
-            .detail-table thead th {
-                background: #eaf2fb;
-                color: #1f3b5b;
-                text-align: center;
-            }
-
-            .detail-table tbody tr:nth-child(even) {
-                background: #fafcff;
-            }
-
-            .detail-table tbody tr:hover {
-                background: #f1f7ff;
-            }
-
-            .right-box {
-                border: 1px solid #d6e4f0;
-                border-radius: 8px;
-                padding: 12px;
-                background: #f8fbff;
-                margin-bottom: 20px;
-            }
-
-            .right-box h3 {
-                margin-bottom: 12px;
-                border-bottom: 1px solid #d6e4f0;
-                padding-bottom: 8px;
-            }
-
-            .top-list {
-                list-style: none;
-                padding-left: 0;
-                margin: 0;
-            }
-
-            .top-list li {
-                padding: 10px 8px;
-                border-bottom: 1px solid #e1e8ef;
-                line-height: 1.6;
-            }
-
-            .top-list li:last-child {
-                border-bottom: none;
-            }
-
-            .item-name {
-                font-weight: bold;
-            }
-
-            .item-value {
-                color: #0d4f8b;
-                font-weight: bold;
-            }
-
-            .empty-data {
-                color: #888;
-                font-style: italic;
-                text-align: center;
-            }
-
-            .section-title {
-                margin-top: 10px;
-                margin-bottom: 12px;
-            }
-        </style>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="assets/css/binance-style.css">
     </head>
-
     <body>
-        <table class="page-table">
-            <tr>
-                <!-- CỘT BÊN TRÁI -->
-                <td class="left-panel">
+        <div class="app-shell">
 
-                    <h1>Thông kê doanh thu</h1>
+            <nav class="bn-nav">
+                <div class="bn-nav__inner">
+                    <div class="bn-nav__brand">
+                        <div class="bn-nav__logo-mark"><span>H</span></div>
+                        <span>Hotel Admin</span>
+                    </div>
+                    <div class="bn-nav__user">
+                        <a href="main.jsp" class="bn-btn bn-btn--ghost">
+                            <i class="fa-solid fa-house"></i>
+                            Trang chính
+                        </a>
+                    </div>
+                </div>
+            </nav>
 
+            <main class="bn-container">
+
+                <a href="main.jsp" class="bn-back-link">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Về trang chủ
+                </a>
+
+                <div class="bn-page-header">
                     <div>
-                        <a class="top-link" href="main.jsp">Trang chủ</a>
+                        <h1 class="bn-page-header__title">
+                            <i class="fa-solid fa-chart-line" style="color: var(--bn-yellow);"></i>
+                            Thống kê doanh thu
+                        </h1>
+                        <p class="bn-page-header__subtitle">
+                            Tổng quan doanh thu, chi tiết hoá đơn và các mục dẫn đầu
+                        </p>
+                    </div>
+                </div>
+
+                <!-- FILTER -->
+                <form action="RevenueDetailServlet" method="get" class="bn-filter">
+                    <div class="bn-filter__field">
+                        <label class="bn-label" for="tuNgay">
+                            <i class="fa-solid fa-calendar-day"></i>
+                            Từ ngày
+                        </label>
+                        <input type="date" id="tuNgay" name="tuNgay" class="bn-input" value="<%= tuNgay %>">
                     </div>
 
-                    <form class="filter-form" action="RevenueDetailServlet" method="get">
-                        <label for="tuNgay">Từ ngày:</label>
-                        <input type="date" id="tuNgay" name="tuNgay" value="<%= tuNgay %>">
+                    <div class="bn-filter__field">
+                        <label class="bn-label" for="denNgay">
+                            <i class="fa-solid fa-calendar-day"></i>
+                            Đến ngày
+                        </label>
+                        <input type="date" id="denNgay" name="denNgay" class="bn-input" value="<%= denNgay %>">
+                    </div>
 
-                        <label for="denNgay">Đến ngày:</label>
-                        <input type="date" id="denNgay" name="denNgay" value="<%= denNgay %>">
-
-                        <label for="thang">Tháng:</label>
-                        <select name="thang" id="thang">
-                            <option value="">--Chọn tháng--</option>
-                            <%
-                                for (int i = 1; i <= 12; i++) {
-                            %>
+                    <div class="bn-filter__field">
+                        <label class="bn-label" for="thang">
+                            <i class="fa-solid fa-calendar"></i>
+                            Tháng
+                        </label>
+                        <select name="thang" id="thang" class="bn-select">
+                            <option value="">-- Chọn tháng --</option>
+                            <% for (int i = 1; i <= 12; i++) { %>
                             <option value="<%= i %>" <%= String.valueOf(i).equals(thang) ? "selected" : "" %>>
-                                <%= i %>
+                                Tháng <%= i %>
                             </option>
-                            <%
-                                }
-                            %>
+                            <% } %>
                         </select>
-
-                        <label for="nam">Năm</label>
-                        <input type="number" id="nam" name="nam" value="<%= nam %>" min="2000" max="2100" placeholder="Nhập năm"/>
-
-                        <button type="submit" name="action" value="filter">Tìm kiếm</button>
-                        <button type="reset">Clear</button>
-                    </form>
-
-                    <%
-                        if (!infoMessage.isEmpty()) {
-                    %>
-                    <div class="info-box"><%= infoMessage %></div>
-                    <%
-                        }
-                    %>
-
-                    <table class="summary-table">
-                        <tr>
-                            <td>
-                                <span class="summary-title">Tổng doanh thu</span>
-                                <span class="summary-value"><%= tongDoanhThu %></span>
-                            </td>
-                            <td>
-                                <span class="summary-title">Doanh thu phòng</span>
-                                <span class="summary-value"><%= doanhThuPhong %></span>
-                            </td>
-                            <td>
-                                <span class="summary-title">Doanh thu dịch vụ</span>
-                                <span class="summary-value"><%= doanhThuDichVu %></span>
-                            </td>
-                        </tr>
-                    </table>
-
-                    <h2 class="section-title">Danh sách hóa đơn chi tiết</h2>
-
-                    <table class="detail-table">
-                        <thead>
-                            <tr>
-                                <th>Mã hóa đơn</th>
-                                <th>Mã nhân viên</th>
-                                <th>Mã khách hàng</th>
-                                <th>Tên nhân viên</th>
-                                <th>Tên khách hàng</th>
-                                <th>Ngày lập</th>
-                                <th>Tiền phòng</th>
-                                <th>Tiền dịch vụ</th>
-                                <th>Tổng thanh toán</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <%
-                                if (hoaDonList != null && !hoaDonList.isEmpty()) {
-                                    for (RevenueDetailDTO hd : hoaDonList) {
-                            %>
-                            <tr>
-                                <td><%= hd.getMaHoaDon() %></td>
-                                <td><%= hd.getMaNV() %></td>
-                                <td><%= hd.getMaKH() %></td>
-                                <td><%= hd.getTenNV() %></td>
-                                <td><%= hd.getTenKH() %></td>
-                                <td><%= hd.getNgayLap() %></td>
-                                <td><%= hd.getTongTienPhong() %></td>
-                                <td><%= hd.getTongTienDV() %></td>
-                                <td><%= hd.getTongThanhToan() %></td>
-                            </tr>
-                            <%
-                                    }
-                                } else {
-                            %>
-                            <tr>
-                                <td colspan="9" class="empty-data">Không có dữ liệu</td>
-                            </tr>
-                            <%
-                                }
-                            %>
-                        </tbody>
-                    </table>
-                </td>
-
-                <!-- CỘT BÊN PHẢI -->
-                <td class="right-panel">
-                    <div class="right-box">
-                        <h3>Top 3 phòng doanh thu cao nhất</h3>
-                        <ul class="top-list">
-                            <%
-                                if (top3Phong != null && !top3Phong.isEmpty()) {
-                                    for (TopRoomDTO p : top3Phong) {
-                            %>
-                            <li>
-                                <a class="item-name" href="RevenueTopDetailServlet?type=room&id=<%= p.getMaPhong() %>&thang=<%= thang %>&nam=<%= nam %>">
-                                    <%= p.getTenPhong() %>
-                                </a>
-                                <br>
-                                <span class="item-value"><%= p.getDoanhThu() %></span>
-                            </li>
-                            <%
-                                    }
-                                } else {
-                            %>
-                            <li class="empty-data">Không có dữ liệu</li>
-                            <%
-                                }
-                            %>
-                        </ul>
                     </div>
 
-                    <div class="right-box">
-                        <h3>Top 3 dịch vụ doanh thu cao nhất</h3>
-                        <ul class="top-list">
-                            <%
-                                if (top3DichVu != null && !top3DichVu.isEmpty()) {
-                                    for (TopServiceDTO dv : top3DichVu) {
-                            %>
-                            <li>
-                                <a class="item-name" href="RevenueTopDetailServlet?type=service&id=<%= dv.getMaDV() %>&thang=<%= thang %>&nam=<%= nam %>">
-                                    <%= dv.getTenDichVu() %>
-                                </a>
-                                <br>
-                                <span class="item-value"><%= dv.getDoanhThu() %></span>
-                            </li>
-                            <%
-                                    }
-                                } else {
-                            %>
-                            <li class="empty-data">Không có dữ liệu</li>
-                            <%
-                                }
-                            %>
-                        </ul>
+                    <div class="bn-filter__field">
+                        <label class="bn-label" for="nam">
+                            <i class="fa-solid fa-calendar-days"></i>
+                            Năm
+                        </label>
+                        <input type="number" id="nam" name="nam" class="bn-input"
+                               value="<%= nam %>" min="2000" max="2100" placeholder="Nhập năm" />
                     </div>
-                </td>
-            </tr>
-        </table>
+
+                    <div class="bn-filter__actions">
+                        <button type="reset" class="bn-btn bn-btn--ghost">
+                            <i class="fa-solid fa-eraser"></i>
+                            Xoá
+                        </button>
+                        <button type="submit" name="action" value="filter" class="bn-btn bn-btn--primary">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            Tìm kiếm
+                        </button>
+                    </div>
+                </form>
+
+                <% if (!infoMessage.isEmpty()) { %>
+                <div class="bn-alert bn-alert--info" style="margin-bottom: 20px;">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span><%= infoMessage %></span>
+                </div>
+                <% } %>
+
+                <!-- DASHBOARD -->
+                <div class="bn-dashboard">
+
+                    <!-- MAIN: KPI + TABLE -->
+                    <div>
+                        <!-- KPI CARDS -->
+                        <div class="bn-kpi-grid">
+                            <div class="bn-kpi">
+                                <div class="bn-kpi__head">
+                                    <div class="bn-kpi__icon"><i class="fa-solid fa-sack-dollar"></i></div>
+                                    <span class="bn-kpi__label">Tổng doanh thu</span>
+                                </div>
+                                <div class="bn-kpi__value bn-kpi__value--accent">
+                                    <%= tongDoanhThu %>
+                                </div>
+                            </div>
+
+                            <div class="bn-kpi">
+                                <div class="bn-kpi__head">
+                                    <div class="bn-kpi__icon"><i class="fa-solid fa-bed"></i></div>
+                                    <span class="bn-kpi__label">Doanh thu phòng</span>
+                                </div>
+                                <div class="bn-kpi__value">
+                                    <%= doanhThuPhong %>
+                                </div>
+                            </div>
+
+                            <div class="bn-kpi">
+                                <div class="bn-kpi__head">
+                                    <div class="bn-kpi__icon"><i class="fa-solid fa-concierge-bell"></i></div>
+                                    <span class="bn-kpi__label">Doanh thu dịch vụ</span>
+                                </div>
+                                <div class="bn-kpi__value">
+                                    <%= doanhThuDichVu %>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DETAIL TABLE -->
+                        <h2 class="bn-section-title">
+                            <i class="fa-solid fa-list-ol" style="color: var(--bn-yellow); margin-right: 8px;"></i>
+                            Danh sách hoá đơn chi tiết
+                        </h2>
+
+                        <div class="bn-table-wrap">
+                            <div class="bn-table-scroll">
+                                <table class="bn-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Mã HĐ</th>
+                                            <th>Mã NV</th>
+                                            <th>Mã KH</th>
+                                            <th>Tên nhân viên</th>
+                                            <th>Tên khách hàng</th>
+                                            <th>Ngày lập</th>
+                                            <th style="text-align: right;">Tiền phòng</th>
+                                            <th style="text-align: right;">Tiền dịch vụ</th>
+                                            <th style="text-align: right;">Tổng</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% if (hoaDonList != null && !hoaDonList.isEmpty()) {
+                                            for (RevenueDetailDTO hd : hoaDonList) { %>
+                                        <tr>
+                                            <td><strong style="color: var(--bn-yellow);">#<%= hd.getMaHoaDon() %></strong></td>
+                                            <td class="num"><%= hd.getMaNV() %></td>
+                                            <td class="num"><%= hd.getMaKH() %></td>
+                                            <td><%= hd.getTenNV() %></td>
+                                            <td><strong><%= hd.getTenKH() %></strong></td>
+                                            <td class="num"><%= hd.getNgayLap() %></td>
+                                            <td class="num" style="text-align: right;"><%= hd.getTongTienPhong() %></td>
+                                            <td class="num" style="text-align: right;"><%= hd.getTongTienDV() %></td>
+                                            <td class="num" style="text-align: right; color: var(--bn-yellow); font-weight: 700;">
+                                                <%= hd.getTongThanhToan() %>
+                                            </td>
+                                        </tr>
+                                        <% } } else { %>
+                                        <tr>
+                                            <td colspan="9" class="bn-table__empty">
+                                                <i class="fa-solid fa-chart-simple" style="font-size: 24px; display: block; margin-bottom: 8px; color: var(--bn-slate);"></i>
+                                                Không có dữ liệu
+                                            </td>
+                                        </tr>
+                                        <% } %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SIDEBAR: TOP LISTS -->
+                    <aside class="bn-sidebar">
+
+                        <div class="bn-panel" style="margin-bottom: 0;">
+                            <div class="bn-panel__head">
+                                <div class="bn-panel__title">
+                                    <i class="fa-solid fa-trophy"></i>
+                                    Top 3 phòng
+                                </div>
+                            </div>
+
+                            <ul class="bn-top-list">
+                                <% if (top3Phong != null && !top3Phong.isEmpty()) {
+                                    int idx = 0;
+                                    for (TopRoomDTO p : top3Phong) { idx++; %>
+                                <li>
+                                    <a class="bn-top-list__item"
+                                       href="RevenueTopDetailServlet?type=room&id=<%= p.getMaPhong() %>&thang=<%= thang %>&nam=<%= nam %>">
+                                        <div class="bn-top-list__rank"><%= idx %></div>
+                                        <div class="bn-top-list__body">
+                                            <div class="bn-top-list__name"><%= p.getTenPhong() %></div>
+                                            <div class="bn-top-list__value"><%= p.getDoanhThu() %></div>
+                                        </div>
+                                        <i class="fa-solid fa-chevron-right" style="color: var(--bn-slate); font-size: 12px;"></i>
+                                    </a>
+                                </li>
+                                <% } } else { %>
+                                <li class="bn-top-list__empty">Không có dữ liệu</li>
+                                <% } %>
+                            </ul>
+                        </div>
+
+                        <div class="bn-panel" style="margin-bottom: 0;">
+                            <div class="bn-panel__head">
+                                <div class="bn-panel__title">
+                                    <i class="fa-solid fa-star"></i>
+                                    Top 3 dịch vụ
+                                </div>
+                            </div>
+
+                            <ul class="bn-top-list">
+                                <% if (top3DichVu != null && !top3DichVu.isEmpty()) {
+                                    int idx = 0;
+                                    for (TopServiceDTO dv : top3DichVu) { idx++; %>
+                                <li>
+                                    <a class="bn-top-list__item"
+                                       href="RevenueTopDetailServlet?type=service&id=<%= dv.getMaDV() %>&thang=<%= thang %>&nam=<%= nam %>">
+                                        <div class="bn-top-list__rank"><%= idx %></div>
+                                        <div class="bn-top-list__body">
+                                            <div class="bn-top-list__name"><%= dv.getTenDichVu() %></div>
+                                            <div class="bn-top-list__value"><%= dv.getDoanhThu() %></div>
+                                        </div>
+                                        <i class="fa-solid fa-chevron-right" style="color: var(--bn-slate); font-size: 12px;"></i>
+                                    </a>
+                                </li>
+                                <% } } else { %>
+                                <li class="bn-top-list__empty">Không có dữ liệu</li>
+                                <% } %>
+                            </ul>
+                        </div>
+
+                    </aside>
+                </div>
+
+            </main>
+
+            <footer class="bn-footer">
+                &copy; 2026 <strong>Hotel Admin</strong> · Hệ thống quản lý nội bộ
+            </footer>
+
+        </div>
     </body>
 </html>

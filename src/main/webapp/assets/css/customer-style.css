@@ -1,0 +1,400 @@
+/* =========================================================
+   Customer Premium Theme
+   Override layer — chỉ áp dụng khi <body class="customer-theme">
+   Load SAU binance-style.css
+   ========================================================= */
+
+.customer-theme {
+    /* Background toàn trang ấm hơn, có glow vàng rất nhẹ */
+    background:
+        radial-gradient(ellipse 900px 500px at 15% -10%, rgba(240, 185, 11, 0.08), transparent 60%),
+        radial-gradient(ellipse 700px 400px at 110% 10%, rgba(240, 185, 11, 0.05), transparent 60%),
+        var(--bn-snow);
+}
+
+/* =========================================================
+   NAV — dark premium
+   ========================================================= */
+.customer-theme .bn-nav {
+    background: linear-gradient(180deg, #1A1A1F 0%, var(--bn-dark) 100%);
+    border-bottom: 1px solid rgba(240, 185, 11, 0.15);
+    box-shadow: 0 4px 20px -8px rgba(0, 0, 0, 0.4);
+}
+
+.customer-theme .bn-nav__brand {
+    color: var(--bn-white);
+    letter-spacing: -0.3px;
+}
+
+.customer-theme .bn-nav__logo-mark {
+    width: 38px;
+    height: 38px;
+    font-size: 20px;
+    box-shadow:
+        0 4px 14px -2px rgba(240, 185, 11, 0.6),
+        0 0 0 1px rgba(240, 185, 11, 0.3);
+}
+
+.customer-theme .bn-nav__brand-sub {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--bn-yellow);
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    margin-top: 2px;
+    line-height: 1;
+}
+
+.customer-theme .bn-nav__brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.customer-theme .bn-nav__brand-main {
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--bn-white);
+}
+
+/* Nút ghost trên nền nav tối — đổi sang sáng */
+.customer-theme .bn-nav .bn-btn--ghost {
+    color: rgba(255, 255, 255, 0.85);
+    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.customer-theme .bn-nav .bn-btn--ghost:hover {
+    color: var(--bn-yellow);
+    border-color: var(--bn-yellow);
+    background: rgba(240, 185, 11, 0.08);
+}
+
+/* =========================================================
+   HERO — dark band thay cho page-header
+   ========================================================= */
+.customer-hero {
+    background: linear-gradient(135deg, #1A1A1F 0%, var(--bn-dark) 50%, #2A2A30 100%);
+    color: var(--bn-white);
+    padding: 56px 32px 96px; /* padding dưới sâu để content (đang bn-container--overlap margin-top -48) lấn lên đẹp */
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+}
+
+.customer-hero::before {
+    content: "";
+    position: absolute;
+    inset: -50%;
+    background:
+        radial-gradient(ellipse 700px 450px at 10% 30%, rgba(240, 185, 11, 0.22), transparent 60%),
+        radial-gradient(ellipse 500px 300px at 90% 80%, rgba(30, 174, 219, 0.08), transparent 60%),
+        radial-gradient(ellipse 400px 250px at 70% 20%, rgba(240, 185, 11, 0.08), transparent 60%);
+    z-index: -2;
+    animation: bn-hero-glow 14s ease-in-out infinite alternate;
+}
+
+.customer-hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    background-size: 56px 56px;
+    z-index: -1;
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+}
+
+.customer-hero__inner {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Back link trong hero cần sáng màu lên */
+.customer-hero .bn-back-link {
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 20px;
+}
+
+.customer-hero .bn-back-link:hover {
+    color: var(--bn-yellow);
+}
+
+.customer-hero__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--bn-yellow);
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    margin-bottom: 18px;
+    padding: 6px 14px;
+    background: rgba(240, 185, 11, 0.1);
+    border: 1px solid rgba(240, 185, 11, 0.3);
+    border-radius: 50px;
+    animation: bn-fade-up 600ms ease both;
+}
+
+.customer-hero__badge::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--bn-yellow);
+    box-shadow: 0 0 10px var(--bn-yellow);
+    animation: bn-pulse 2s ease-in-out infinite;
+}
+
+.customer-hero__title {
+    font-size: 38px;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.6px;
+    color: var(--bn-white);
+    margin-bottom: 12px;
+    animation: bn-fade-up 700ms ease 100ms both;
+}
+
+.customer-hero__title .accent {
+    background: linear-gradient(135deg, var(--bn-yellow) 0%, var(--bn-light-gold) 50%, var(--bn-yellow) 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: bn-shimmer 4s linear infinite;
+}
+
+.customer-hero__subtitle {
+    font-size: 16px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 640px;
+    line-height: 1.6;
+    animation: bn-fade-up 700ms ease 200ms both;
+}
+
+/* Container khi có hero — giữ z-index trên hero để shadow card đẹp */
+.customer-theme .bn-container--after-hero {
+    position: relative;
+    z-index: 1;
+}
+
+/* =========================================================
+   CARD — upgrade đổ bóng & radius
+   ========================================================= */
+.customer-theme .bn-info-panel,
+.customer-theme .bn-table-wrap {
+    border-radius: 16px;
+    border-color: rgba(230, 232, 234, 0.8);
+    box-shadow:
+        0 1px 2px rgba(32, 32, 37, 0.04),
+        0 8px 24px -8px rgba(32, 32, 37, 0.08);
+    transition: box-shadow 350ms ease, transform 350ms ease;
+}
+
+.customer-theme .bn-info-panel:hover {
+    box-shadow:
+        0 1px 2px rgba(32, 32, 37, 0.04),
+        0 16px 36px -12px rgba(32, 32, 37, 0.14),
+        0 0 0 1px rgba(240, 185, 11, 0.15);
+}
+
+/* Form card trên trang customer — nâng cấp */
+.customer-theme .bn-form-card {
+    border-radius: 18px;
+    box-shadow:
+        0 1px 2px rgba(32, 32, 37, 0.05),
+        0 20px 48px -16px rgba(32, 32, 37, 0.18),
+        0 4px 12px -4px rgba(240, 185, 11, 0.08);
+    border: 1px solid rgba(230, 232, 234, 0.6);
+}
+
+.customer-theme .bn-form-card::before {
+    height: 5px;
+    background: linear-gradient(90deg,
+        var(--bn-yellow) 0%,
+        var(--bn-light-gold) 40%,
+        var(--bn-gold) 60%,
+        var(--bn-yellow) 100%);
+    background-size: 200% 100%;
+    animation: bn-shimmer 3s linear infinite;
+}
+
+/* =========================================================
+   Info panel title — decor thanh vàng bên trái
+   ========================================================= */
+.customer-theme .bn-info-panel__title {
+    position: relative;
+    padding-left: 14px;
+}
+
+.customer-theme .bn-info-panel__title::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 20px;
+    border-radius: 2px;
+    background: linear-gradient(180deg, var(--bn-yellow), var(--bn-light-gold));
+}
+
+/* =========================================================
+   PRICE — phóng to, glow mạnh hơn
+   ========================================================= */
+.customer-theme .bn-info-grid__value--accent {
+    font-size: 24px;
+    letter-spacing: -0.5px;
+    text-shadow: 0 0 24px rgba(240, 185, 11, 0.3);
+}
+
+/* =========================================================
+   BUTTONS — nút CTA chính lộng lẫy hơn
+   ========================================================= */
+/* Primary button trong customer = pill, gradient mạnh, shadow vàng */
+.customer-theme .bn-btn--primary {
+    background: linear-gradient(135deg,
+        var(--bn-gold) 0%,
+        var(--bn-yellow) 50%,
+        var(--bn-light-gold) 100%);
+    background-size: 180% 180%;
+    background-position: 0% 50%;
+    color: var(--bn-ink);
+    border-radius: 50px;
+    padding: 12px 28px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    box-shadow:
+        0 4px 14px -3px rgba(240, 185, 11, 0.5),
+        0 2px 4px -1px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    transition:
+        background-position 500ms ease,
+        box-shadow 300ms ease,
+        transform 200ms ease;
+}
+
+.customer-theme .bn-btn--primary:hover {
+    background: linear-gradient(135deg,
+        var(--bn-gold) 0%,
+        var(--bn-yellow) 50%,
+        var(--bn-light-gold) 100%);
+    background-size: 180% 180%;
+    background-position: 100% 50%;
+    color: var(--bn-ink);
+    transform: translateY(-2px);
+    box-shadow:
+        0 8px 22px -4px rgba(240, 185, 11, 0.6),
+        0 4px 8px -2px rgba(0, 0, 0, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.customer-theme .bn-btn--primary:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* =========================================================
+   TABLE — hover sang trọng hơn
+   ========================================================= */
+.customer-theme .bn-table tbody tr:hover {
+    background: linear-gradient(90deg,
+        rgba(240, 185, 11, 0.08) 0%,
+        rgba(240, 185, 11, 0.02) 60%,
+        transparent 100%);
+    box-shadow: inset 4px 0 0 var(--bn-yellow);
+}
+
+.customer-theme .bn-table thead {
+    background: linear-gradient(180deg, #FAFAFA, var(--bn-snow));
+}
+
+.customer-theme .bn-table th {
+    color: var(--bn-text-secondary);
+    letter-spacing: 0.8px;
+}
+
+/* =========================================================
+   INPUT — focus sang trọng hơn với viền kép
+   ========================================================= */
+.customer-theme .bn-input:focus,
+.customer-theme .bn-select:focus,
+.customer-theme .bn-textarea:focus {
+    border-color: var(--bn-yellow);
+    box-shadow:
+        0 0 0 4px rgba(240, 185, 11, 0.18),
+        0 0 0 1px var(--bn-yellow) inset;
+}
+
+/* =========================================================
+   FOOTER — tối + accent vàng, thông điệp khách hàng
+   ========================================================= */
+.customer-theme .bn-footer {
+    background: linear-gradient(180deg, var(--bn-dark) 0%, #151519 100%);
+    position: relative;
+    padding: 40px 32px 32px;
+    border-top: 1px solid rgba(240, 185, 11, 0.1);
+}
+
+.customer-theme .bn-footer::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--bn-yellow), transparent);
+}
+
+.customer-theme .bn-footer__tagline {
+    display: block;
+    font-size: 11px;
+    color: var(--bn-yellow);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+/* =========================================================
+   RESPONSIVE TWEAKS cho customer
+   ========================================================= */
+@media (max-width: 768px) {
+    .customer-hero {
+        padding: 40px 20px 72px;
+    }
+
+    .customer-hero__title {
+        font-size: 28px;
+    }
+
+    .customer-hero__subtitle {
+        font-size: 14px;
+    }
+
+    .customer-theme .bn-nav__brand-sub {
+        display: none;
+    }
+}
+
+@media (max-width: 425px) {
+    .customer-hero {
+        padding: 32px 16px 64px;
+    }
+
+    .customer-hero__title {
+        font-size: 22px;
+    }
+
+    .customer-hero__badge {
+        font-size: 10px;
+        padding: 5px 12px;
+    }
+}

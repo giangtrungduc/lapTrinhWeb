@@ -26,8 +26,9 @@ public class LoginServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String username = request.getParameter("username");
         String password = request.getParameter("password");
-        if (username == null && password == null) {
+        if (username == null || password == null) {
             request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
         }
 //        LoginDTO login=new LoginDTO();
 //        login.setPassword(password);

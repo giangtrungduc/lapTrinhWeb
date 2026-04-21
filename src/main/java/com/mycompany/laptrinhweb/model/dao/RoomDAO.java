@@ -196,7 +196,7 @@ public class RoomDAO {
 
     public List<RoomBookingStatusDTO> getRoomBookingStatusByRoomId(int maPhong) {
         List<RoomBookingStatusDTO> li = new ArrayList<>();
-        String sql = "SELECT * FROM DatPhong WHERE MaPhong = ? AND (TrangThai = 'DaDat' OR TrangThai = 'DaNhanPhong')";
+        String sql = "SELECT * FROM DatPhong WHERE MaPhong = ? AND (TrangThai = 'DaDat' OR TrangThai = 'DaNhanPhong' OR TrangThai='ChoXacNhan')";
         try (Connection conn = new DBConnection().getConnection()) {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setInt(1, maPhong);

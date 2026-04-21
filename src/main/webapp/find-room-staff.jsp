@@ -11,59 +11,48 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Danh sách phòng · Premium Booking</title>
+        <title>Danh sách phòng</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link rel="stylesheet" href="assets/css/binance-style.css">
-        <link rel="stylesheet" href="assets/css/customer-style.css">
     </head>
-    <body class="customer-theme">
+    <body>
         <div class="app-shell">
 
-            <!-- Top Navigation (dark premium) -->
+            <!-- Top Navigation -->
             <nav class="bn-nav">
                 <div class="bn-nav__inner">
                     <div class="bn-nav__brand">
                         <div class="bn-nav__logo-mark"><span>H</span></div>
-                        <div class="bn-nav__brand-text">
-                            <span class="bn-nav__brand-main">Hotel</span>
-                            <span class="bn-nav__brand-sub">Premium Booking</span>
-                        </div>
+                        <span>Hotel Staff</span>
                     </div>
                     <div class="bn-nav__user">
-                        <a href="login.jsp" class="bn-btn bn-btn--ghost">
-                            <i class="fa-solid fa-right-to-bracket"></i>
-                            Đăng nhập
+                        <a href="main-employee.jsp" class="bn-btn bn-btn--ghost">
+                            <i class="fa-solid fa-house"></i>
+                            Trang chính
                         </a>
                     </div>
                 </div>
             </nav>
 
-            <!-- HERO -->
-            <section class="customer-hero">
-                <div class="customer-hero__inner">
-                    <a href="login.jsp" class="bn-back-link">
-                        <i class="fa-solid fa-arrow-left"></i>
-                        Quay lại trang chính
-                    </a>
+            <!-- Content -->
+            <main class="bn-container">
 
-                    <span class="customer-hero__badge">
-                        Premium Experience
-                    </span>
+                <a href="main-employee.jsp" class="bn-back-link">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Quay lại trang chính
+                </a>
 
-                    <h1 class="customer-hero__title">
-                        Khám phá những <span class="accent">căn phòng</span> dành riêng cho bạn
-                    </h1>
-                    <p class="customer-hero__subtitle">
-                        Lựa chọn một phòng trống, tận hưởng kỳ lưu trú đẳng cấp với dịch vụ tận tâm và không gian tinh tế.
-                    </p>
+                <div class="bn-page-header">
+                    <div>
+                        <h1 class="bn-page-header__title">Danh sách phòng khách sạn</h1>
+                        <p class="bn-page-header__subtitle">
+                            Chọn một phòng trống để tạo đơn đặt phòng cho khách hàng
+                        </p>
+                    </div>
                 </div>
-            </section>
-
-            <!-- Content (lấn lên hero) -->
-            <main class="bn-container bn-container--after-hero bn-container--overlap">
 
                 <% if (message != null && !message.isEmpty()) { %>
                     <div class="bn-alert bn-alert--info" style="margin-bottom: 20px;">
@@ -117,7 +106,7 @@
                                             <span class="muted">Không thể đặt</span>
                                         <% } else { %>
                                             <a class="bn-btn bn-btn--primary"
-                                               href="BookingByCustomer?action=showBookingForm&maPhong=<%= room.getMaphong() %>">
+                                               href="BookingByStaff?action=showBookingForm&maPhong=<%= room.getMaphong() %>">
                                                 <i class="fa-solid fa-calendar-plus"></i>
                                                 Đặt phòng
                                             </a>
@@ -142,10 +131,9 @@
 
             </main>
 
-            <!-- Footer (customer tone) -->
+            <!-- Footer -->
             <footer class="bn-footer">
-                <span class="bn-footer__tagline">Premium Booking Experience</span>
-                &copy; 2026 <strong>Hotel</strong> · Cảm ơn quý khách đã lựa chọn chúng tôi
+                &copy; 2026 <strong>Hotel Staff</strong> · Hệ thống quản lý nội bộ
             </footer>
 
         </div>

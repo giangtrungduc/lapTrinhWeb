@@ -9,7 +9,7 @@
     String error = (String) request.getAttribute("error");
 
     if (room == null) {
-        response.sendRedirect("BookingByCustomer?action=list");
+        response.sendRedirect("BookingByStaff?action=list");
         return;
     }
 %>
@@ -18,65 +18,56 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Đặt phòng <%= room.getSophong() %> · Premium Booking</title>
+        <title>Đặt phòng <%= room.getSophong() %></title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <link rel="stylesheet" href="assets/css/binance-style.css">
-        <link rel="stylesheet" href="assets/css/customer-style.css">
     </head>
-    <body class="customer-theme">
+    <body>
         <div class="app-shell">
 
-            <!-- Top Navigation (dark premium) -->
+            <!-- Top Navigation -->
             <nav class="bn-nav">
                 <div class="bn-nav__inner">
                     <div class="bn-nav__brand">
                         <div class="bn-nav__logo-mark"><span>H</span></div>
-                        <div class="bn-nav__brand-text">
-                            <span class="bn-nav__brand-main">Hotel</span>
-                            <span class="bn-nav__brand-sub">Premium Booking</span>
-                        </div>
+                        <span>Hotel Staff</span>
                     </div>
                     <div class="bn-nav__user">
-                        <a href="login.jsp" class="bn-btn bn-btn--ghost">
-                            <i class="fa-solid fa-right-to-bracket"></i>
-                            Đăng nhập
+                        <a href="main-employee.jsp" class="bn-btn bn-btn--ghost">
+                            <i class="fa-solid fa-house"></i>
+                            Trang chính
                         </a>
                     </div>
                 </div>
             </nav>
 
-            <!-- HERO -->
-            <section class="customer-hero">
-                <div class="customer-hero__inner">
-                    <a href="BookingByCustomer?action=list" class="bn-back-link">
-                        <i class="fa-solid fa-arrow-left"></i>
-                        Quay lại danh sách phòng
-                    </a>
-
-                    <span class="customer-hero__badge">
-                        Hoàn tất đặt phòng
-                    </span>
-
-                    <h1 class="customer-hero__title">
-                        Đặt phòng số <span class="accent"><%= room.getSophong() %></span>
-                    </h1>
-                    <p class="customer-hero__subtitle">
-                        Kiểm tra thông tin phòng và điền thông tin cá nhân để xác nhận kỳ lưu trú của bạn. Chúng tôi sẽ sớm liên hệ lại.
-                    </p>
-                </div>
-            </section>
-
             <!-- Content -->
-            <main class="bn-container bn-container--after-hero bn-container--overlap">
+            <main class="bn-container">
+
+                <a href="BookingByStaff?action=list" class="bn-back-link">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Quay lại danh sách phòng
+                </a>
+
+                <div class="bn-page-header">
+                    <div>
+                        <h1 class="bn-page-header__title">
+                            Đặt phòng số <%= room.getSophong() %>
+                        </h1>
+                        <p class="bn-page-header__subtitle">
+                            Kiểm tra thông tin phòng và điền thông tin khách để hoàn tất đơn đặt phòng
+                        </p>
+                    </div>
+                </div>
 
                 <!-- ROOM INFO PANEL -->
                 <div class="bn-info-panel" style="margin-bottom: 24px;">
                     <div class="bn-info-panel__head">
                         <div class="bn-info-panel__title">
-                            <i class="fa-solid fa-bed"></i>
+                            <i class="fa-solid fa-bed" style="color: var(--bn-yellow);"></i>
                             Thông tin phòng
                         </div>
                         <%
@@ -171,7 +162,7 @@
                         </p>
                     </div>
 
-                    <form action="BookingByCustomer" method="post" class="bn-form">
+                    <form action="BookingByStaff" method="post" class="bn-form">
                         <input type="hidden" name="action" value="submitBooking" />
                         <input type="hidden" name="maPhong" value="<%= room.getMaphong() %>" />
 
@@ -255,7 +246,7 @@
                         </div>
 
                         <div class="bn-form__actions bn-form__actions--right">
-                            <a href="BookingByCustomer?action=list" class="bn-btn bn-btn--ghost">
+                            <a href="BookingByStaff?action=list" class="bn-btn bn-btn--ghost">
                                 <i class="fa-solid fa-xmark"></i>
                                 Huỷ
                             </a>
@@ -269,10 +260,9 @@
 
             </main>
 
-            <!-- Footer (customer tone) -->
+            <!-- Footer -->
             <footer class="bn-footer">
-                <span class="bn-footer__tagline">Premium Booking Experience</span>
-                &copy; 2026 <strong>Hotel</strong> · Cảm ơn quý khách đã lựa chọn chúng tôi
+                &copy; 2026 <strong>Hotel Staff</strong> · Hệ thống quản lý nội bộ
             </footer>
 
         </div>

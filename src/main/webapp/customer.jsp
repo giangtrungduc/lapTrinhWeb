@@ -5,362 +5,204 @@
     List<CustomerDTO> customerList = (List<CustomerDTO>) request.getAttribute("customerList");
     if (customerList == null)
         customerList = new ArrayList<>();
+    String filter = request.getParameter("filter") != null ? request.getParameter("filter") : "";
 %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="vi">
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>QUẢN LÝ KHÁCH HÀNG</title>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Quản lý khách hàng</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-        <style>
-            :root {
-                --primary-color: #4361ee;
-                --secondary-color: #3f37c9;
-                --success-color: #4cc9f0;
-                --danger-color: #f72585;
-                --bg-color: #f8f9fa;
-                --text-color: #212529;
+        <link rel="stylesheet" href="assets/css/binance-style.css">
+        <script>
+            function openEditModal(id, name, phone) {
+                document.getElementById('editModal').classList.add('is-open');
+                document.getElementById('edit-id').value = id;
+                document.getElementById('edit-name').value = name;
+                document.getElementById('edit-phone').value = phone;
             }
 
-            body {
-                font-family: 'Inter', sans-serif;
-                background-color: var(--bg-color);
-                color: var(--text-color);
-                margin: 0;
-                padding: 20px;
+            function closeModal() {
+                document.getElementById('editModal').classList.remove('is-open');
             }
 
-            .container {
-                max-width: 1200px;
-                margin: 0 auto;
-                background: white;
-                padding: 30px;
-                border-radius: 12px;
-                box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            window.onclick = function (event) {
+                let modal = document.getElementById('editModal');
+                if (event.target == modal) closeModal();
             }
 
-            h2 {
-                color: var(--primary-color);
-                font-weight: 600;
-                margin-top: 0;
-                border-bottom: 2px solid #eee;
-                padding-bottom: 10px;
-            }
-
-            /* Toolbar chứa nút thêm và tìm kiếm */
-            .toolbar {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 25px;
-                gap: 20px;
-                flex-wrap: wrap;
-            }
-
-            .search-box {
-                display: flex;
-                gap: 10px;
-                background: #eee;
-                padding: 5px;
-                border-radius: 8px;
-            }
-
-            input[name="filter"] {
-                padding: 8px 15px;
-                border: 1px solid #ddd;
-                border-radius: 6px;
-                min-width: 250px;
-                outline: none;
-            }
-
-            /* Button Styles */
-            button {
-                cursor: pointer;
-                border: none;
-                border-radius: 6px;
-                padding: 10px 20px;
-                font-weight: 600;
-                transition: all 0.3s ease;
-            }
-
-            .btn-add {
-                background-color: var(--primary-color);
-                color: white;
-            }
-
-            .btn-add:hover {
-                background-color: var(--secondary-color);
-            }
-
-            .btn-search {
-                background-color: #333;
-                color: white;
-            }
-
-            /* Table Styles */
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 10px;
-                overflow: hidden;
-                border-radius: 8px;
-            }
-
-            th {
-                background-color: #f1f3f5;
-                color: #495057;
-                font-weight: 600;
-                text-transform: uppercase;
-                font-size: 13px;
-                letter-spacing: 0.5px;
-            }
-
-            th, td {
-                padding: 15px;
-                text-align: left;
-                border-bottom: 1px solid #eee;
-            }
-
-            tr:hover {
-                background-color: #fcfcfc;
-            }
-
-            .action-icons a {
-                text-decoration: none;
-                font-size: 18px;
-                margin: 0 8px;
-                transition: transform 0.2s;
-                display: inline-block;
-            }
-
-            .action-icons a:hover {
-                transform: scale(1.2);
-            }
-
-            /* Modal Styles */
-            .modal {
-                display: none;
-                position: fixed;
-                z-index: 1000;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0,0,0,0.4);
-                backdrop-filter: blur(4px);
-            }
-
-            .modal-content {
-                background-color: #fff;
-                margin: 5% auto;
-                padding: 30px;
-                border-radius: 15px;
-                width: 350px;
-                box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-                position: relative;
-            }
-
-            .modal-content h3 {
-                margin-top: 0;
-                color: var(--primary-color);
-            }
-
-            .close {
-                position: absolute;
-                right: 20px;
-                top: 15px;
-                font-size: 24px;
-                color: #aaa;
-                cursor: pointer;
-            }
-
-            .modal-content input {
-                width: 100%;
-                padding: 10px;
-                margin: 10px 0 20px 0;
-                border: 1px solid #ddd;
-                border-radius: 6px;
-                box-sizing: border-box;
-            }
-
-            .btn-save {
-                background-color: var(--primary-color);
-                color: white;
-                width: 100%;
-            }
-
-            .badge-count {
-                background: #e7f5ff;
-                color: #228be6;
-                padding: 4px 8px;
-                border-radius: 20px;
-                font-size: 12px;
-                font-weight: bold;
-            }
-            /* Ép tất cả các thẻ trong td về cùng font Inter */
-            table td strong,
-            table td code,
-            table td small {
-                font-family: 'Inter', sans-serif; /* Đảm bảo không bị dùng font mặc định của trình duyệt */
-                font-size: 14px; /* Kích thước chuẩn cho nội dung bảng */
-                font-style: normal;
-                text-decoration: none;
-            }
-
-            /* Riêng thẻ code (CCCD) thường có màu nền và border, ta reset nó luôn nếu muốn giống các cột khác */
-            table td code {
-                background: none;
-                padding: 0;
-                color: var(--text-color);
-            }
-
-            /* Chỉnh lại độ đậm nhạt để nhìn cân đối */
-            table td strong {
-                font-weight: 600;
-                color: var(--primary-color);
-            }
-
-            table td small {
-                color: #666; /* Email cho nhạt hơn một chút nhưng vẫn cùng size */
-            }
-
-            /* Căn giữa nội dung các ô để nhìn ngay ngắn hơn */
-            table td {
-                vertical-align: middle;
-            }
-            .header-container {
-                display: flex;
-                justify-content: space-between; /* Đẩy 2 phần tử về 2 phía */
-                align-items: center;           /* Căn giữa theo chiều dọc */
-                margin-bottom: 20px;
-                border-bottom: 2px solid #eee; /* Đường kẻ dưới tiêu đề */
-                padding-bottom: 10px;
-            }
-
-            .header-container h2 {
-                margin: 0;                     /* Bỏ margin mặc định để không bị lệch */
-                border-bottom: none;           /* Bỏ border cũ của h2 nếu có */
-            }
-
-            .btn-home {
-                text-decoration: none;
-                background-color: #6c757d;      /* Màu xám trung tính */
-                color: white;
-                padding: 8px 15px;
-                border-radius: 6px;
-                font-size: 14px;
-                font-weight: 600;
-                transition: background 0.3s;
-            }
-
-            .btn-home:hover {
-                background-color: #495057;
-                color: #fff;
-            }
-        </style>
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') closeModal();
+            });
+        </script>
     </head>
-
-    <script>
-        function openEditModal(id, name, phone) {
-            document.getElementById('editModal').style.display = "block";
-            document.getElementById('edit-id').value = id;
-            document.getElementById('edit-name').value = name;
-            document.getElementById('edit-phone').value = phone;
-        }
-
-        function closeModal() {
-            document.getElementById('editModal').style.display = "none";
-        }
-
-        window.onclick = function (event) {
-            let modal = document.getElementById('editModal');
-            if (event.target == modal)
-                closeModal();
-        }
-
-    </script>
-
     <body>
-        <div class="container">
-            <div class="header-container">
-                <h2><i class="fa-solid fa-users-gear"></i> QUẢN LÝ KHÁCH HÀNG</h2>
+        <div class="app-shell">
 
-                <a href="main.jsp" class="btn-home">
-                    <i class="fa-solid fa-house"></i> Quay về trang chủ
+            <nav class="bn-nav">
+                <div class="bn-nav__inner">
+                    <div class="bn-nav__brand">
+                        <div class="bn-nav__logo-mark"><span>H</span></div>
+                        <span>Hotel Admin</span>
+                    </div>
+                    <div class="bn-nav__user">
+                        <a href="main.jsp" class="bn-btn bn-btn--ghost">
+                            <i class="fa-solid fa-house"></i>
+                            Trang chính
+                        </a>
+                    </div>
+                </div>
+            </nav>
+
+            <main class="bn-container">
+
+                <a href="main.jsp" class="bn-back-link">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Quay lại trang chính
                 </a>
-            </div>
 
-            <div class="toolbar">
-                <form action="add-customer-form.jsp" method="post">
-                    <button type="submit" class="btn-add">
-                        <i class="fa-solid fa-plus"></i> Thêm mới khách hàng
-                    </button> 
-                </form>
+                <div class="bn-page-header">
+                    <div>
+                        <h1 class="bn-page-header__title">
+                            <i class="fa-solid fa-users-gear" style="color: var(--bn-yellow);"></i>
+                            Quản lý khách hàng
+                        </h1>
+                        <p class="bn-page-header__subtitle">
+                            Danh sách <%= customerList.size() %> khách hàng trong hệ thống
+                        </p>
+                    </div>
+                </div>
 
-                <form action="FilterCustomerServlet" method="post" class="search-box">
-                    <input name="filter" placeholder="Tìm theo tên, CCCD, SĐT..." value="<%= request.getParameter("filter") != null ? request.getParameter("filter") : ""%>"> 
-                    <button type="submit" class="btn-search">
-                        <i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm
-                    </button>
-                </form>
-            </div>
+                <div class="bn-toolbar">
+                    <form action="add-customer-form.jsp" method="post" class="bn-inline-form">
+                        <button type="submit" class="bn-btn bn-btn--primary">
+                            <i class="fa-solid fa-plus"></i>
+                            Thêm mới khách hàng
+                        </button>
+                    </form>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Họ tên</th>
-                        <th>CCCD</th>
-                        <th>SĐT</th>
-                        <th>Email</th>
-                        <th>Địa chỉ</th>
-                        <th>Lượt đặt</th>
-                        <th style="text-align: center;">Thao tác</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% for (CustomerDTO cus : customerList) {%>
-                    <tr>
-                        <td><strong>#<%=cus.getMakh()%></strong></td>
-                        <td><%=cus.getHoten()%></td>
-                        <td><code><%=cus.getCccd()%></code></td>
-                        <td><%=cus.getSdt()%></td>
-                        <td><small><%=cus.getEmail()%></small></td>
-                        <td><%=cus.getDiachi()%></td>
-                        <td><span class="badge-count"><%=cus.getSolandat()%> lần</span></td>
-                        <td class="action-icons" style="text-align: center;">
-                            <a href="javascript:void(0)" title="Chỉnh sửa" 
-                               onclick="openEditModal('<%=cus.getMakh()%>', '<%=cus.getHoten()%>', '<%=cus.getSdt()%>')">
-                                <i class="fa-solid fa-pen-to-square" style="color: var(--primary-color);"></i>
-                            </a>
-                            <a href="DeleteCustomerServlet?id=<%=cus.getMakh()%>" title="Xóa"
-                               onclick="return confirm('Bạn có chắc muốn xóa khách hàng này?')">
-                                <i class="fa-solid fa-trash" style="color: var(--danger-color);"></i>
-                            </a>
-                        </td>            
-                    </tr>
-                    <% }%>
-                </tbody>
-            </table>
+                    <form action="FilterCustomerServlet" method="post" class="bn-search">
+                        <i class="fa-solid fa-magnifying-glass bn-search__icon"></i>
+                        <input type="text" name="filter"
+                               class="bn-search__input"
+                               placeholder="Tìm theo tên, CCCD, SĐT..."
+                               value="<%= filter %>">
+                        <button type="submit" class="bn-search__btn">
+                            Tìm kiếm
+                        </button>
+                    </form>
+                </div>
+
+                <div class="bn-table-wrap">
+                    <div class="bn-table-scroll">
+                        <table class="bn-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Họ tên</th>
+                                    <th>CCCD</th>
+                                    <th>SĐT</th>
+                                    <th>Email</th>
+                                    <th>Địa chỉ</th>
+                                    <th>Lượt đặt</th>
+                                    <th style="text-align: center;">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (!customerList.isEmpty()) {
+                                    for (CustomerDTO cus : customerList) { %>
+                                <tr>
+                                    <td><strong style="color: var(--bn-yellow);">#<%= cus.getMakh() %></strong></td>
+                                    <td><strong><%= cus.getHoten() %></strong></td>
+                                    <td class="num"><%= cus.getCccd() %></td>
+                                    <td class="num"><%= cus.getSdt() %></td>
+                                    <td><span class="muted" style="font-style: normal;"><%= cus.getEmail() %></span></td>
+                                    <td><%= cus.getDiachi() %></td>
+                                    <td><span class="bn-count"><%= cus.getSolandat() %> lần</span></td>
+                                    <td>
+                                        <div class="bn-table__actions">
+                                            <button type="button" class="bn-btn bn-btn--icon edit"
+                                                    title="Chỉnh sửa"
+                                                    onclick="openEditModal('<%= cus.getMakh() %>', '<%= cus.getHoten().replace("'", "\\'") %>', '<%= cus.getSdt() %>')">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </button>
+                                            <a href="DeleteCustomerServlet?id=<%= cus.getMakh() %>"
+                                               class="bn-btn bn-btn--icon delete"
+                                               title="Xoá"
+                                               onclick="return confirm('Bạn có chắc muốn xoá khách hàng này?')">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <% } } else { %>
+                                <tr>
+                                    <td colspan="8" class="bn-table__empty">
+                                        <i class="fa-solid fa-users-slash" style="font-size: 24px; display: block; margin-bottom: 8px; color: var(--bn-slate);"></i>
+                                        Không có khách hàng nào
+                                    </td>
+                                </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </main>
+
+            <footer class="bn-footer">
+                &copy; 2026 <strong>Hotel Admin</strong> · Hệ thống quản lý nội bộ
+            </footer>
+
         </div>
 
-        <div id="editModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeModal()">&times;</span>
-                <h3><i class="fa-solid fa-user-pen"></i> Chỉnh sửa</h3>
-                <form action="UpdateCustomerServlet" method="POST">
+        <!-- Modal chỉnh sửa -->
+        <div id="editModal" class="bn-modal">
+            <div class="bn-modal__content">
+                <button type="button" class="bn-modal__close" onclick="closeModal()">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+
+                <div class="bn-modal__header">
+                    <h3 class="bn-modal__title">
+                        <i class="fa-solid fa-user-pen"></i>
+                        Chỉnh sửa khách hàng
+                    </h3>
+                </div>
+
+                <form action="UpdateCustomerServlet" method="POST" class="bn-form">
                     <input type="hidden" id="edit-id" name="id">
 
-                    <label>Họ tên:</label>
-                    <input type="text" id="edit-name" name="name">
+                    <div class="bn-field">
+                        <label class="bn-label" for="edit-name">
+                            <i class="fa-solid fa-signature"></i>
+                            Họ tên
+                        </label>
+                        <input type="text" id="edit-name" name="name" class="bn-input">
+                    </div>
 
-                    <label>Số điện thoại:</label>
-                    <input type="text" id="edit-phone" name="phone">
+                    <div class="bn-field">
+                        <label class="bn-label" for="edit-phone">
+                            <i class="fa-solid fa-phone"></i>
+                            Số điện thoại
+                        </label>
+                        <input type="text" id="edit-phone" name="phone" class="bn-input">
+                    </div>
 
-                    <button type="submit" class="btn-save">Cập nhật thông tin</button>
+                    <div class="bn-form__actions bn-form__actions--right">
+                        <button type="button" class="bn-btn bn-btn--ghost" onclick="closeModal()">
+                            Huỷ
+                        </button>
+                        <button type="submit" class="bn-btn bn-btn--primary">
+                            <i class="fa-solid fa-check"></i>
+                            Cập nhật
+                        </button>
+                    </div>
                 </form>
             </div>
         </div>

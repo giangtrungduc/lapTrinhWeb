@@ -3,7 +3,6 @@
 <%@page import="com.mycompany.laptrinhweb.model.dto.BookingDTO"%>
 <%@page import="com.mycompany.laptrinhweb.model.dto.ServiceDTO"%>
 <%@page import="com.mycompany.laptrinhweb.model.dto.UsedServiceDTO"%>
-
 <%
     String user = (String) session.getAttribute("user");
     if (user == null) {
@@ -18,358 +17,323 @@
 
     String message = (String) request.getAttribute("message");
     String customerInformation = request.getAttribute("customerInformation") != null
-            ? request.getAttribute("customerInformation").toString()
-            : "";
+            ? request.getAttribute("customerInformation").toString() : "";
 
     Boolean showServicePanel = (Boolean) request.getAttribute("showServicePanel");
-    if (showServicePanel == null) {
-        showServicePanel = false;
-    }
+    if (showServicePanel == null) showServicePanel = false;
 %>
-
 <!DOCTYPE html>
-<html>
+<html lang="vi">
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Quản lý dịch vụ</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                margin: 20px;
-            }
-
-            table {
-                border-collapse: collapse;
-                width: 100%;
-            }
-
-            table, th, td {
-                border: 1px solid #ccc;
-            }
-
-            th, td {
-                padding: 8px;
-                text-align: left;
-            }
-
-            .btn {
-                padding: 6px 12px;
-                cursor: pointer;
-            }
-
-            .btn-add {
-                background-color: #4CAF50;
-                color: white;
-                border: none;
-            }
-
-            .btn-delete {
-                background-color: #d9534f;
-                color: white;
-                border: none;
-            }
-
-            .btn-action {
-                background-color: #0275d8;
-                color: white;
-                border: none;
-            }
-
-            .btn-close {
-                background-color: #777;
-                color: white;
-                border: none;
-            }
-
-            .message {
-                margin: 10px 0;
-                padding: 10px;
-                background: #f5f5f5;
-                border: 1px solid #ddd;
-            }
-
-            .overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.45);
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                z-index: 999;
-            }
-
-            .modal {
-                width: 92%;
-                height: 85vh;
-                background: white;
-                border-radius: 8px;
-                padding: 15px;
-                box-shadow: 0 0 10px rgba(0,0,0,0.3);
-                display: flex;
-                flex-direction: column;
-            }
-
-            .modal-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 10px;
-            }
-
-            .modal-content {
-                display: flex;
-                gap: 15px;
-                flex: 1;
-                min-height: 0;
-            }
-
-            .panel {
-                flex: 1;
-                border: 1px solid #ccc;
-                padding: 10px;
-                overflow-y: auto;
-                min-height: 0;
-            }
-
-            .quantity-box {
-                display: none;
-                margin-top: 8px;
-                padding: 8px;
-                border: 1px solid #ccc;
-                background: #f9f9f9;
-            }
-
-            .quantity-box input[type="number"] {
-                width: 80px;
-            }
-
-            .top-actions {
-                margin-bottom: 15px;
-            }
-        </style>
-
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="assets/css/binance-style.css">
         <script>
             function openQuantityBox(id) {
+                document.querySelectorAll('.bn-qty-box.is-open').forEach(function (b) {
+                    if (b.id !== "quantity-box-" + id) b.classList.remove('is-open');
+                });
                 var box = document.getElementById("quantity-box-" + id);
-                if (box) {
-                    box.style.display = "block";
-                }
+                if (box) box.classList.add('is-open');
             }
 
             function closeQuantityBox(id) {
                 var box = document.getElementById("quantity-box-" + id);
-                if (box) {
-                    box.style.display = "none";
-                }
+                if (box) box.classList.remove('is-open');
             }
         </script>
     </head>
     <body>
-        <h1>Quản lý dịch vụ</h1>
+        <div class="app-shell">
 
-        <p>Xin chào, <b><%= user %></b></p>
-        <a href="main-employee.jsp">Quay về Dashboard</a>
-
-        <hr>
-
-        <form action="ServiceServlet" method="get" class="top-actions">
-            <label>Tìm kiếm khách hàng đang nhận phòng</label>
-            <input type="text" name="customerInformation" placeholder="SĐT hoặc CCCD..." value="<%= customerInformation %>">
-            <button type="submit" name="action" value="search">Tìm khách hàng</button>
-        </form>
-
-        <% if (message != null) { %>
-            <div class="message">
-                <b><%= message %></b>
-            </div>
-        <% } %>
-
-        <h2>Danh sách phiếu đặt đang nhận phòng</h2>
-
-        <%
-            if (dsDaNhanPhong == null || dsDaNhanPhong.isEmpty()) {
-        %>
-            <p>Không có phiếu đặt nào đang ở trạng thái đã nhận phòng.</p>
-        <%
-            } else {
-        %>
-            <table>
-                <tr>
-                    <th>Mã đặt phòng</th>
-                    <th>Mã khách hàng</th>
-                    <th>Mã phòng</th>
-                    <th>Ngày nhận dự kiến</th>
-                    <th>Ngày trả dự kiến</th>
-                    <th>Thao tác</th>
-                </tr>
-
-                <%
-                    for (BookingDTO dp : dsDaNhanPhong) {
-                %>
-                    <tr>
-                        <td><%= dp.getMaDatPhong() %></td>
-                        <td><%= dp.getMaKH() %></td>
-                        <td><%= dp.getMaPhong() %></td>
-                        <td><%= dp.getNgayNhanDuKien() %></td>
-                        <td><%= dp.getNgayTraDuKien() %></td>
-                        <td>
-                            <form action="ServiceServlet" method="get">
-                                <input type="hidden" name="action" value="view">
-                                <input type="hidden" name="maDatPhong" value="<%= dp.getMaDatPhong() %>">
-                                <input type="hidden" name="customerInformation" value="<%= customerInformation %>">
-                                <input class="btn btn-action" type="submit" value="Thao tác">
-                            </form>
-                        </td>
-                    </tr>
-                <%
-                    }
-                %>
-            </table>
-        <%
-            }
-        %>
-
-        <% if (showServicePanel && chiTiet != null) { %>
-            <div class="overlay">
-                <div class="modal">
-                    <div class="modal-header">
-                        <div>
-                            <h2>Quản lý dịch vụ cho phiếu đặt: <%= chiTiet.getMaDatPhong() %></h2>
-                            <p>
-                                <b>Khách hàng:</b> <%= chiTiet.getTenKhachHang() %> |
-                                <b>Phòng:</b> <%= chiTiet.getSoPhong() %> |
-                                <b>CCCD:</b> <%= chiTiet.getCccd() %> |
-                                <b>SĐT:</b> <%= chiTiet.getSdtKhachHang() %>
-                            </p>
-                        </div>
-
-                        <form action="ServiceServlet" method="get">
-                            <input type="hidden" name="action" value="close">
-                            <input type="hidden" name="customerInformation" value="<%= customerInformation %>">
-                            <input class="btn btn-close" type="submit" value="Đóng">
-                        </form>
+            <nav class="bn-nav">
+                <div class="bn-nav__inner">
+                    <div class="bn-nav__brand">
+                        <div class="bn-nav__logo-mark"><span>H</span></div>
+                        <span>Hotel Staff</span>
                     </div>
-
-                    <div class="modal-content">
-                        <!-- Panel trái -->
-                        <div class="panel">
-                            <h3>Danh sách dịch vụ khách sạn</h3>
-
-                            <%
-                                if (dsDichVu == null || dsDichVu.isEmpty()) {
-                            %>
-                                <p>Không có dịch vụ nào.</p>
-                            <%
-                                } else {
-                            %>
-                                <table>
-                                    <tr>
-                                        <th>Mã DV</th>
-                                        <th>Tên dịch vụ</th>
-                                        <th>Đơn giá</th>
-                                        <th>Mô tả</th>
-                                        <th>Thêm</th>
-                                    </tr>
-
-                                    <%
-                                        for (ServiceDTO dv : dsDichVu) {
-                                    %>
-                                        <tr>
-                                            <td><%= dv.getMaDV() %></td>
-                                            <td><%= dv.getTenDV() %></td>
-                                            <td><%= dv.getDonGia() %></td>
-                                            <td><%= dv.getMoTa() %></td>
-                                            <td>
-                                                <button type="button" class="btn btn-add"
-                                                        onclick="openQuantityBox('<%= dv.getMaDV() %>')">
-                                                    Thêm
-                                                </button>
-
-                                                <div class="quantity-box" id="quantity-box-<%= dv.getMaDV() %>">
-                                                    <form action="ServiceServlet" method="post">
-                                                        <input type="hidden" name="action" value="add">
-                                                        <input type="hidden" name="maDatPhong" value="<%= chiTiet.getMaDatPhong() %>">
-                                                        <input type="hidden" name="maDV" value="<%= dv.getMaDV() %>">
-                                                        <input type="hidden" name="customerInformation" value="<%= customerInformation %>">
-
-                                                        <label>Số lượng:</label>
-                                                        <input type="number" name="soLuong" min="1" required>
-
-                                                        <input class="btn btn-add" type="submit" value="Xác nhận">
-                                                        <button type="button" class="btn btn-close"
-                                                                onclick="closeQuantityBox('<%= dv.getMaDV() %>')">
-                                                            Hủy
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    <%
-                                        }
-                                    %>
-                                </table>
-                            <%
-                                }
-                            %>
-                        </div>
-
-                        <!-- Panel phải -->
-                        <div class="panel">
-                            <h3>Dịch vụ hiện có của phiếu đặt</h3>
-
-                            <%
-                                if (dsDichVuDaThem == null || dsDichVuDaThem.isEmpty()) {
-                            %>
-                                <p>Phiếu đặt này chưa có dịch vụ nào.</p>
-                            <%
-                                } else {
-                            %>
-                                <table>
-                                    <tr>
-                                        <th>Mã SDDV</th>
-                                        <th>Tên dịch vụ</th>
-                                        <th>Số lượng</th>
-                                        <th>Đơn giá</th>
-                                        <th>Thành tiền</th>
-                                        <th>Thời gian sử dụng</th>
-                                        <th>Xóa</th>
-                                    </tr>
-
-                                    <%
-                                        for (UsedServiceDTO item : dsDichVuDaThem) {
-                                    %>
-                                        <tr>
-                                            <td><%= item.getMaSDDV() %></td>
-                                            <td><%= item.getTenDV() %></td>
-                                            <td><%= item.getSoLuong() %></td>
-                                            <td><%= item.getDonGia() %></td>
-                                            <td><%= item.getThanhTien() %></td>
-                                            <td><%= item.getThoiGianSuDung() %></td>
-                                            <td>
-                                                <form action="ServiceServlet" method="post"
-                                                      onsubmit="return confirm('Bạn có chắc muốn xóa dịch vụ này?');">
-                                                    <input type="hidden" name="action" value="delete">
-                                                    <input type="hidden" name="maDatPhong" value="<%= chiTiet.getMaDatPhong() %>">
-                                                    <input type="hidden" name="maSDDV" value="<%= item.getMaSDDV() %>">
-                                                    <input type="hidden" name="customerInformation" value="<%= customerInformation %>">
-                                                    <input class="btn btn-delete" type="submit" value="Xóa">
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    <%
-                                        }
-                                    %>
-                                </table>
-                            <%
-                                }
-                            %>
-                        </div>
+                    <div class="bn-nav__user">
+                        <span class="bn-nav__welcome">
+                            Xin chào, <strong><%= user %></strong>
+                        </span>
+                        <a href="main-employee.jsp" class="bn-btn bn-btn--ghost">
+                            <i class="fa-solid fa-house"></i>
+                            Trang chính
+                        </a>
                     </div>
                 </div>
+            </nav>
+
+            <main class="bn-container">
+
+                <a href="main-employee.jsp" class="bn-back-link">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Quay về Dashboard
+                </a>
+
+                <div class="bn-page-header">
+                    <div>
+                        <h1 class="bn-page-header__title">
+                            <i class="fa-solid fa-concierge-bell" style="color: var(--bn-yellow);"></i>
+                            Quản lý dịch vụ
+                        </h1>
+                        <p class="bn-page-header__subtitle">
+                            Thêm hoặc xoá dịch vụ cho khách đang lưu trú
+                        </p>
+                    </div>
+                </div>
+
+                <!-- SEARCH -->
+                <form action="ServiceServlet" method="get" class="bn-search" style="margin-bottom: 20px;">
+                    <i class="fa-solid fa-magnifying-glass bn-search__icon"></i>
+                    <input type="text" name="customerInformation"
+                           class="bn-search__input"
+                           placeholder="Nhập SĐT hoặc số CCCD..."
+                           value="<%= customerInformation %>">
+                    <button type="submit" name="action" value="search" class="bn-search__btn">
+                        Tìm khách hàng
+                    </button>
+                </form>
+
+                <% if (message != null) { %>
+                <div class="bn-alert bn-alert--info" style="margin-bottom: 20px;">
+                    <i class="fa-solid fa-circle-info"></i>
+                    <span><%= message %></span>
+                </div>
+                <% } %>
+
+                <!-- BOOKING LIST -->
+                <div class="bn-panel">
+                    <div class="bn-panel__head">
+                        <div class="bn-panel__title">
+                            <i class="fa-solid fa-bed"></i>
+                            Phiếu đặt đang nhận phòng
+                        </div>
+                        <% if (dsDaNhanPhong != null) { %>
+                        <span class="bn-count"><%= dsDaNhanPhong.size() %> phiếu</span>
+                        <% } %>
+                    </div>
+
+                    <% if (dsDaNhanPhong == null || dsDaNhanPhong.isEmpty()) { %>
+                    <div class="bn-table__empty" style="padding: 40px 20px;">
+                        <i class="fa-solid fa-inbox" style="font-size: 28px; display: block; margin-bottom: 10px; color: var(--bn-slate);"></i>
+                        Không có phiếu đặt nào ở trạng thái đã nhận phòng.
+                    </div>
+                    <% } else { %>
+                    <div class="bn-table-wrap" style="box-shadow: none;">
+                        <div class="bn-table-scroll">
+                            <table class="bn-table">
+                                <thead>
+                                    <tr>
+                                        <th>Mã ĐP</th>
+                                        <th>Mã KH</th>
+                                        <th>Mã phòng</th>
+                                        <th>Ngày nhận dự kiến</th>
+                                        <th>Ngày trả dự kiến</th>
+                                        <th style="text-align: center;">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% for (BookingDTO dp : dsDaNhanPhong) { %>
+                                    <tr>
+                                        <td><strong style="color: var(--bn-yellow);">#<%= dp.getMaDatPhong() %></strong></td>
+                                        <td class="num"><%= dp.getMaKH() %></td>
+                                        <td class="num"><%= dp.getMaPhong() %></td>
+                                        <td class="num"><%= dp.getNgayNhanDuKien() %></td>
+                                        <td class="num"><%= dp.getNgayTraDuKien() %></td>
+                                        <td style="text-align: center;">
+                                            <form action="ServiceServlet" method="get" class="bn-inline-form">
+                                                <input type="hidden" name="action" value="view">
+                                                <input type="hidden" name="maDatPhong" value="<%= dp.getMaDatPhong() %>">
+                                                <input type="hidden" name="customerInformation" value="<%= customerInformation %>">
+                                                <button type="submit" class="bn-btn bn-btn--primary bn-btn--sm">
+                                                    <i class="fa-solid fa-gear"></i>
+                                                    Quản lý DV
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
+
+            </main>
+
+            <footer class="bn-footer">
+                &copy; 2026 <strong>Hotel Staff</strong> · Hệ thống quản lý nội bộ
+            </footer>
+
+        </div>
+
+        <!-- FULLSCREEN MODAL: SERVICE PANEL -->
+        <% if (showServicePanel && chiTiet != null) { %>
+        <div class="bn-fullmodal">
+            <div class="bn-fullmodal__content">
+                <div class="bn-fullmodal__header">
+                    <div>
+                        <div class="bn-fullmodal__title">
+                            <i class="fa-solid fa-concierge-bell"></i>
+                            Quản lý dịch vụ · Phiếu đặt #<%= chiTiet.getMaDatPhong() %>
+                        </div>
+                        <div class="bn-fullmodal__meta">
+                            <span><i class="fa-solid fa-user" style="color: var(--bn-yellow);"></i> <strong><%= chiTiet.getTenKhachHang() %></strong></span>
+                            <span><i class="fa-solid fa-bed" style="color: var(--bn-yellow);"></i> Phòng <strong><%= chiTiet.getSoPhong() %></strong></span>
+                            <span><i class="fa-solid fa-id-card" style="color: var(--bn-yellow);"></i> <strong><%= chiTiet.getCccd() %></strong></span>
+                            <span><i class="fa-solid fa-phone" style="color: var(--bn-yellow);"></i> <strong><%= chiTiet.getSdtKhachHang() %></strong></span>
+                        </div>
+                    </div>
+
+                    <form action="ServiceServlet" method="get" class="bn-inline-form">
+                        <input type="hidden" name="action" value="close">
+                        <input type="hidden" name="customerInformation" value="<%= customerInformation %>">
+                        <button type="submit" class="bn-btn bn-btn--ghost">
+                            <i class="fa-solid fa-xmark"></i>
+                            Đóng
+                        </button>
+                    </form>
+                </div>
+
+                <div class="bn-fullmodal__body">
+
+                    <!-- LEFT PANEL: AVAILABLE SERVICES -->
+                    <div class="bn-fullmodal__panel">
+                        <div class="bn-fullmodal__panel-title">
+                            <i class="fa-solid fa-list"></i>
+                            Danh sách dịch vụ khách sạn
+                        </div>
+
+                        <% if (dsDichVu == null || dsDichVu.isEmpty()) { %>
+                        <div class="bn-table__empty" style="padding: 40px 20px;">
+                            <i class="fa-solid fa-circle-info" style="font-size: 24px; display: block; margin-bottom: 8px; color: var(--bn-slate);"></i>
+                            Không có dịch vụ nào.
+                        </div>
+                        <% } else { %>
+                        <div class="bn-table-wrap" style="box-shadow: none; border: none;">
+                            <table class="bn-table bn-table--compact">
+                                <thead>
+                                    <tr>
+                                        <th>Mã</th>
+                                        <th>Tên dịch vụ</th>
+                                        <th style="text-align: right;">Đơn giá</th>
+                                        <th>Mô tả</th>
+                                        <th style="text-align: center;">Thêm</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% for (ServiceDTO dv : dsDichVu) { %>
+                                    <tr>
+                                        <td class="num"><%= dv.getMaDV() %></td>
+                                        <td><strong><%= dv.getTenDV() %></strong></td>
+                                        <td class="num" style="text-align: right; color: var(--bn-yellow); font-weight: 700;">
+                                            <%= dv.getDonGia() %>
+                                        </td>
+                                        <td><span class="muted" style="font-style: normal; font-size: 12px;"><%= dv.getMoTa() %></span></td>
+                                        <td style="text-align: center;">
+                                            <button type="button" class="bn-btn bn-btn--primary bn-btn--sm"
+                                                    onclick="openQuantityBox('<%= dv.getMaDV() %>')">
+                                                <i class="fa-solid fa-plus"></i>
+                                                Thêm
+                                            </button>
+
+                                            <div class="bn-qty-box" id="quantity-box-<%= dv.getMaDV() %>">
+                                                <form action="ServiceServlet" method="post" class="bn-qty-box__row">
+                                                    <input type="hidden" name="action" value="add">
+                                                    <input type="hidden" name="maDatPhong" value="<%= chiTiet.getMaDatPhong() %>">
+                                                    <input type="hidden" name="maDV" value="<%= dv.getMaDV() %>">
+                                                    <input type="hidden" name="customerInformation" value="<%= customerInformation %>">
+
+                                                    <input type="number" name="soLuong" min="1" required
+                                                           class="bn-qty-box__input" placeholder="SL">
+                                                    <button type="submit" class="bn-btn bn-btn--success bn-btn--sm">
+                                                        <i class="fa-solid fa-check"></i>
+                                                    </button>
+                                                    <button type="button" class="bn-btn bn-btn--ghost bn-btn--sm"
+                                                            onclick="closeQuantityBox('<%= dv.getMaDV() %>')">
+                                                        <i class="fa-solid fa-xmark"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                        <% } %>
+                    </div>
+
+                    <!-- RIGHT PANEL: USED SERVICES -->
+                    <div class="bn-fullmodal__panel">
+                        <div class="bn-fullmodal__panel-title">
+                            <i class="fa-solid fa-clipboard-list"></i>
+                            Dịch vụ đã thêm
+                            <% if (dsDichVuDaThem != null && !dsDichVuDaThem.isEmpty()) { %>
+                            <span class="bn-count" style="margin-left: auto;"><%= dsDichVuDaThem.size() %> mục</span>
+                            <% } %>
+                        </div>
+
+                        <% if (dsDichVuDaThem == null || dsDichVuDaThem.isEmpty()) { %>
+                        <div class="bn-table__empty" style="padding: 40px 20px;">
+                            <i class="fa-solid fa-circle-info" style="font-size: 24px; display: block; margin-bottom: 8px; color: var(--bn-slate);"></i>
+                            Phiếu đặt này chưa có dịch vụ nào.
+                        </div>
+                        <% } else { %>
+                        <div class="bn-table-wrap" style="box-shadow: none; border: none;">
+                            <table class="bn-table bn-table--compact">
+                                <thead>
+                                    <tr>
+                                        <th>Mã SDDV</th>
+                                        <th>Tên DV</th>
+                                        <th style="text-align: center;">SL</th>
+                                        <th style="text-align: right;">Đơn giá</th>
+                                        <th style="text-align: right;">Thành tiền</th>
+                                        <th>Thời gian</th>
+                                        <th style="text-align: center;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% for (UsedServiceDTO item : dsDichVuDaThem) { %>
+                                    <tr>
+                                        <td class="num"><%= item.getMaSDDV() %></td>
+                                        <td><strong><%= item.getTenDV() %></strong></td>
+                                        <td class="num" style="text-align: center;"><%= item.getSoLuong() %></td>
+                                        <td class="num" style="text-align: right;"><%= item.getDonGia() %></td>
+                                        <td class="num" style="text-align: right; color: var(--bn-yellow); font-weight: 700;">
+                                            <%= item.getThanhTien() %>
+                                        </td>
+                                        <td class="num" style="font-size: 12px;"><%= item.getThoiGianSuDung() %></td>
+                                        <td style="text-align: center;">
+                                            <form action="ServiceServlet" method="post" class="bn-inline-form"
+                                                  onsubmit="return confirm('Bạn có chắc muốn xoá dịch vụ này?');">
+                                                <input type="hidden" name="action" value="delete">
+                                                <input type="hidden" name="maDatPhong" value="<%= chiTiet.getMaDatPhong() %>">
+                                                <input type="hidden" name="maSDDV" value="<%= item.getMaSDDV() %>">
+                                                <input type="hidden" name="customerInformation" value="<%= customerInformation %>">
+                                                <button type="submit" class="bn-btn bn-btn--icon delete" title="Xoá">
+                                                    <i class="fa-solid fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                        <% } %>
+                    </div>
+
+                </div>
             </div>
+        </div>
         <% } %>
     </body>
 </html>

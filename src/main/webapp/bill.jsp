@@ -1,325 +1,286 @@
-<%-- 
-    Document   : bill
-    Created on : Apr 7, 2026, 9:29:27 AM
-    Author     : DELL
---%>
-
 <%@page import="com.mycompany.laptrinhweb.model.dto.InvoiceServiceDTO"%>
-
 <%@page import="java.util.List"%>
 <%@page import="java.math.BigDecimal"%>
 <%@page import="com.mycompany.laptrinhweb.model.dto.BillDTO"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="vi">
     <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Bill Page</title>
-        <style>
-            /* Tổng thể trang */
-            body {
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                line-height: 1.6;
-                color: #333;
-                max-width: 900px;
-                margin: 0 auto;
-                padding: 20px;
-                background-color: #f4f7f6;
-            }
-
-            h1, h2, h3 {
-                color: #2c3e50;
-                border-bottom: 2px solid #3498db;
-                padding-bottom: 10px;
-            }
-
-            /* Link quay về */
-            a {
-                text-decoration: none;
-                color: #3498db;
-                font-weight: bold;
-            }
-
-            /* Form tìm kiếm */
-            form[action="FindBookingServlet"] {
-                background: #fff;
-                padding: 20px;
-                border-radius: 8px;
-                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-                margin-bottom: 30px;
-            }
-
-            input[name="madp"], input[type="datetime-local"] {
-                padding: 8px;
-                border: 1px solid #ddd;
-                border-radius: 4px;
-                width: 200px;
-            }
-
-            button {
-                cursor: pointer;
-                transition: 0.3s;
-                border: none;
-                border-radius: 4px;
-                padding: 10px 20px;
-            }
-
-            button:hover {
-                opacity: 0.8;
-            }
-
-            /* Các bảng dữ liệu */
-            table {
-                width: 100%;
-                background: #fff;
-                border-collapse: collapse;
-                margin-bottom: 20px;
-                border-radius: 8px;
-                overflow: hidden;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-                border: none !important; /* Ghi đè border="1" */
-            }
-
-            th, td {
-                padding: 12px 15px;
-                border-bottom: 1px solid #eee;
-            }
-
-            th {
-                background-color: #3498db;
-                color: white;
-                text-transform: uppercase;
-                font-size: 14px;
-            }
-
-            tr:last-child td {
-                border-bottom: none;
-            }
-
-            /* Thông báo lỗi */
-            .error-msg {
-                background-color: #fdeaea;
-                color: #e74c3c;
-                padding: 15px;
-                border-left: 5px solid #e74c3c;
-                border-radius: 4px;
-                margin: 20px 0;
-            }
-
-            /* Tổng thanh toán */
-            h2[align="right"] {
-                background: #2c3e50;
-                color: #fff;
-                display: inline-block;
-                float: right;
-                padding: 10px 20px;
-                border-radius: 4px;
-                border-bottom: none;
-            }
-
-            /* Nút hành động */
-            .btn-cancel {
-                display: inline-block;
-                padding: 10px 20px;
-                background: #95a5a6;
-                color: white !important;
-                border-radius: 4px;
-                margin-top: 20px;
-            }
-
-            .btn-save {
-                background-color: #27ae60;
-                color: white;
-                font-weight: bold;
-                font-size: 16px;
-                margin-left: 10px;
-            }
-        </style>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Lập hoá đơn</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link rel="stylesheet" href="assets/css/binance-style.css">
     </head>
     <body>
-        <h1>Lập hoá đơn</h1>
-        <a href="main.jsp"> Quay về trang chủ </a>
-        <h2>Thông tin đặt phòng</h2>
-        <form action="FindBookingServlet" method="post">
-            <label>Nhập mã đặt phòng</label>
-            <input name="madp"> 
-            <button>Tìm</button>
-        </form>
-        <%
-            String msgf = (String) request.getAttribute("msgf");
-            if (msgf != null) {
+        <div class="app-shell">
 
-        %>
-        <h3 style="color:red;"><%=msgf%></h3>
-        <%
-        } else {
+            <nav class="bn-nav">
+                <div class="bn-nav__inner">
+                    <div class="bn-nav__brand">
+                        <div class="bn-nav__logo-mark"><span>H</span></div>
+                        <span>Hotel Staff</span>
+                    </div>
+                    <div class="bn-nav__user">
+                        <a href="main.jsp" class="bn-btn bn-btn--ghost">
+                            <i class="fa-solid fa-house"></i>
+                            Trang chính
+                        </a>
+                    </div>
+                </div>
+            </nav>
 
-        %>
-        <%            BillDTO bill = (BillDTO) request.getAttribute("bill");
-            if (bill != null) {
-        %>
-        <table width="100%">
-            <tr>
-                <td width="30%"><b>Khách hàng:</b></td>
-                <td><%= bill.getHoTen()%></td>
-            </tr>
-            <tr>
-                <td><b>SĐT:</b></td>
-                <td><%= bill.getSdt()%></td>
-            </tr>
-            <tr>
-                <td><b>CCCD:</b></td>
-                <td><%= bill.getCccd()%></td>
-            </tr>
-            <tr>
-                <td><b>Email:</b></td>
-                <td><%= bill.getEmail()%></td>
-            </tr>
+            <main class="bn-container">
 
-            <tr>
-                <td colspan="2">&nbsp;</td>
-            </tr>
+                <a href="main.jsp" class="bn-back-link">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Quay về trang chủ
+                </a>
 
-            <tr>
-                <td><b>Phòng:</b></td>
-                <td><%= bill.getSoPhong()%> - Phòng Deluxe</td>
-            </tr>
-            <tr>
-                <td><b>Ngày nhận (dự kiến):</b></td>
-                <td><%= bill.getNgayNhanDuKien()%></td>
-            </tr>
-            <tr>
-                <td><b>Ngày trả (dự kiến):</b></td>
-                <td><%= bill.getNgayTraDuKien()%></td>
-            </tr>
+                <div class="bn-page-header">
+                    <div>
+                        <h1 class="bn-page-header__title">
+                            <i class="fa-solid fa-file-invoice-dollar" style="color: var(--bn-yellow);"></i>
+                            Lập hoá đơn
+                        </h1>
+                        <p class="bn-page-header__subtitle">
+                            Tìm phiếu đặt phòng và xuất hoá đơn thanh toán cho khách
+                        </p>
+                    </div>
+                </div>
 
-        </table>
-        <form action="InvoiceServlet" method="post">
-            <input name="madp" type="hidden" value="<%=bill.getMaDatPhong()%>">
-            <input name="ngaytra" type="datetime-local">
-            <button>Xuat hoa don</button>
-        </form>
-        <%
-            }
-        %>
+                <!-- SEARCH BAR -->
+                <div class="bn-panel">
+                    <div class="bn-panel__head">
+                        <div class="bn-panel__title">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            Tìm phiếu đặt phòng
+                        </div>
+                    </div>
 
+                    <form action="FindBookingServlet" method="post" class="bn-search" style="max-width: 500px;">
+                        <i class="fa-solid fa-receipt bn-search__icon"></i>
+                        <input type="text" name="madp"
+                               class="bn-search__input"
+                               placeholder="Nhập mã đặt phòng...">
+                        <button type="submit" class="bn-search__btn">
+                            Tìm
+                        </button>
+                    </form>
+                </div>
 
-        <%-- Bảng tính tiền phòng (Chỉ hiện sau khi đã tính toán xong ở Servlet) --%>
-        <%
-            BillDTO bill1 = (BillDTO) request.getAttribute("bill");
-            // Kiểm tra bill không null và đã được tính tiền phòng (để phân biệt với bảng tìm kiếm ban đầu)
-            if (bill1 != null && bill1.getTongTienPhong() != null) {
-        %>
-        <h2>TÍNH TIỀN PHÒNG</h2>
-        <table width="100%">
-            <tr>
-                <td width="30%"><b>Giá phòng/đêm:</b></td>
-                <td><%= bill1.getGiaPhong()%> đ</td>
-            </tr>
-            <tr>
-                <td><b>Số đêm:</b></td>
-                <td><%= bill1.getSoDem()%></td>
-            </tr>
-            <tr>
-                <td><b>Thành tiền phòng:</b></td>
-                <td><%= bill1.getTongTienPhong()%> đ</td>
-            </tr>
+                <%
+                    String msgf = (String) request.getAttribute("msgf");
+                    if (msgf != null) {
+                %>
+                <div class="bn-alert bn-alert--error" style="margin-bottom: 20px;">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <span><%= msgf %></span>
+                </div>
+                <%
+                    } else {
+                        BillDTO bill = (BillDTO) request.getAttribute("bill");
+                        if (bill != null) {
+                %>
 
-            <tr>
-                <td colspan="2">&nbsp;</td>
-            </tr>
+                <!-- CUSTOMER + BOOKING INFO -->
+                <div class="bn-invoice">
+                    <h3 class="bn-invoice__section-title">
+                        <i class="fa-solid fa-user"></i>
+                        Thông tin đặt phòng
+                    </h3>
 
-            <tr style="background-color: #eee;">
-                <td><b>Tổng tiền phòng:</b></td>
-                <td>
-                    <b>
-                        <%
-                            BigDecimal tongCuoi = bill1.getTongTienPhong();
-                            out.print(tongCuoi + " đ");
-                        %>
-                    </b>
-                </td>
-            </tr>
-        </table>
+                    <div class="bn-invoice__info-grid">
+                        <div class="bn-invoice__info-row">
+                            <span class="bn-invoice__info-label">Khách hàng</span>
+                            <span class="bn-invoice__info-value"><%= bill.getHoTen() %></span>
+                        </div>
+                        <div class="bn-invoice__info-row">
+                            <span class="bn-invoice__info-label">SĐT</span>
+                            <span class="bn-invoice__info-value"><%= bill.getSdt() %></span>
+                        </div>
+                        <div class="bn-invoice__info-row">
+                            <span class="bn-invoice__info-label">CCCD</span>
+                            <span class="bn-invoice__info-value"><%= bill.getCccd() %></span>
+                        </div>
+                        <div class="bn-invoice__info-row">
+                            <span class="bn-invoice__info-label">Email</span>
+                            <span class="bn-invoice__info-value"><%= bill.getEmail() %></span>
+                        </div>
+                    </div>
 
+                    <h3 class="bn-invoice__section-title">
+                        <i class="fa-solid fa-bed"></i>
+                        Phòng &amp; thời gian
+                    </h3>
 
-        <%
-            List<InvoiceServiceDTO> services = bill1.getServices();
-            BigDecimal tongTienDV = BigDecimal.ZERO;
-        %>
+                    <div class="bn-invoice__info-grid">
+                        <div class="bn-invoice__info-row">
+                            <span class="bn-invoice__info-label">Phòng</span>
+                            <span class="bn-invoice__info-value"><%= bill.getSoPhong() %> — Phòng Deluxe</span>
+                        </div>
+                        <div class="bn-invoice__info-row">
+                            <span class="bn-invoice__info-label">Ngày nhận (dự kiến)</span>
+                            <span class="bn-invoice__info-value"><%= bill.getNgayNhanDuKien() %></span>
+                        </div>
+                        <div class="bn-invoice__info-row">
+                            <span class="bn-invoice__info-label">Ngày trả (dự kiến)</span>
+                            <span class="bn-invoice__info-value"><%= bill.getNgayTraDuKien() %></span>
+                        </div>
+                    </div>
 
-        <h3>DỊCH VỤ SỬ DỤNG</h3>
+                    <!-- ISSUE INVOICE FORM -->
+                    <form action="InvoiceServlet" method="post"
+                          style="display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap; padding-top: 16px; border-top: 1px solid var(--bn-border-light);">
+                        <input name="madp" type="hidden" value="<%= bill.getMaDatPhong() %>">
 
+                        <div class="bn-field" style="flex: 1; min-width: 220px;">
+                            <label class="bn-label" for="ngaytra">
+                                <i class="fa-solid fa-calendar-check"></i>
+                                Ngày trả thực tế
+                            </label>
+                            <input type="datetime-local" id="ngaytra" name="ngaytra" class="bn-input">
+                        </div>
 
-        <table width="100%">
-            <tr>
-                <th align="left">Dịch vụ</th>
-                <th align="left">Đơn giá</th>
-                <th align="center">Số lượng</th>
-                <th align="left">Thành tiền</th>
+                        <button type="submit" class="bn-btn bn-btn--primary">
+                            <i class="fa-solid fa-file-invoice"></i>
+                            Xuất hoá đơn
+                        </button>
+                    </form>
+                </div>
 
-            </tr>
+                <%
+                    }
+                %>
 
-            <%
-                if (services != null && !services.isEmpty()) {
-                    for (InvoiceServiceDTO svc : services) {
-                        // Tính toán thành tiền từng dòng
-                        BigDecimal thanhTienRow = svc.getDonGia().multiply(new BigDecimal(svc.getSoLuong()));
-                        tongTienDV = tongTienDV.add(thanhTienRow);
-            %>
-            <tr>
-                <td><%= svc.getTenDV()%></td>
-                <td><%= svc.getDonGia()%></td>
-                <td align="center"><%= svc.getSoLuong()%></td>
-                <td><%= thanhTienRow%></td>
+                <%
+                    BillDTO bill1 = (BillDTO) request.getAttribute("bill");
+                    if (bill1 != null && bill1.getTongTienPhong() != null) {
+                %>
 
-            </tr>
-            <%
-                }
-            } else {
-            %>
-            <tr>
-                <td colspan="5" align="center">Chưa có dịch vụ nào.</td>
-            </tr>
-            <%
-                }
-            %>
-        </table>
+                <!-- ROOM CHARGE -->
+                <div class="bn-invoice">
+                    <h3 class="bn-invoice__section-title">
+                        <i class="fa-solid fa-key"></i>
+                        Tính tiền phòng
+                    </h3>
 
-        <table>
-            <tr>
-                <td align="left"><b>Tổng tiền dịch vụ:</b></td>
-                <td align="right"><b><%= tongTienDV%> đ</b></td>
-            </tr>
-        </table>
+                    <div class="bn-invoice__info-grid">
+                        <div class="bn-invoice__info-row">
+                            <span class="bn-invoice__info-label">Giá phòng / đêm</span>
+                            <span class="bn-invoice__info-value"><%= bill1.getGiaPhong() %> đ</span>
+                        </div>
+                        <div class="bn-invoice__info-row">
+                            <span class="bn-invoice__info-label">Số đêm</span>
+                            <span class="bn-invoice__info-value"><%= bill1.getSoDem() %></span>
+                        </div>
+                    </div>
 
-        <hr>
+                    <div class="bn-invoice__total-row">
+                        <span class="bn-invoice__total-label">Tổng tiền phòng</span>
+                        <span class="bn-invoice__total-value"><%= bill1.getTongTienPhong() %> đ</span>
+                    </div>
+                </div>
 
-        <%-- Tính tổng cộng cuối cùng --%>
-        <%
-            BigDecimal tongCuoiCung = bill1.getTongTienPhong().add(tongTienDV);
-        %>
-        <h2 align="right">TỔNG THANH TOÁN: <%= tongCuoiCung%> đ</h2>
+                <!-- SERVICES -->
+                <%
+                    List<InvoiceServiceDTO> services = bill1.getServices();
+                    BigDecimal tongTienDV = BigDecimal.ZERO;
+                %>
 
+                <div class="bn-invoice">
+                    <h3 class="bn-invoice__section-title">
+                        <i class="fa-solid fa-concierge-bell"></i>
+                        Dịch vụ sử dụng
+                    </h3>
 
-        <a href="bill.jsp" class="btn-cancel">Hủy</a>
-        <form action="SaveInvoiceServlet" method="POST" style="display: inline-block;"> 
-            <input name="madp" type="hidden" value="<%= bill1.getMaDatPhong()%>">
-            <input name="map" type="hidden" value="<%= bill1.getMaPhong()%>">
+                    <div class="bn-table-wrap" style="box-shadow: none; margin-bottom: 16px;">
+                        <div class="bn-table-scroll">
+                            <table class="bn-table bn-table--compact">
+                                <thead>
+                                    <tr>
+                                        <th>Dịch vụ</th>
+                                        <th>Đơn giá</th>
+                                        <th style="text-align: center;">Số lượng</th>
+                                        <th style="text-align: right;">Thành tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%
+                                        if (services != null && !services.isEmpty()) {
+                                            for (InvoiceServiceDTO svc : services) {
+                                                BigDecimal thanhTienRow = svc.getDonGia().multiply(new BigDecimal(svc.getSoLuong()));
+                                                tongTienDV = tongTienDV.add(thanhTienRow);
+                                    %>
+                                    <tr>
+                                        <td><strong><%= svc.getTenDV() %></strong></td>
+                                        <td class="num"><%= svc.getDonGia() %></td>
+                                        <td class="num" style="text-align: center;"><%= svc.getSoLuong() %></td>
+                                        <td class="num" style="text-align: right;"><%= thanhTienRow %></td>
+                                    </tr>
+                                    <% } } else { %>
+                                    <tr>
+                                        <td colspan="4" class="bn-table__empty">
+                                            Chưa có dịch vụ nào.
+                                        </td>
+                                    </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
 
-            <%-- Gửi tiền phòng --%>
-            <input name="tienphong" type="hidden" value="<%= bill1.getTongTienPhong() != null ? bill1.getTongTienPhong() : "0"%>">
+                    <div class="bn-invoice__total-row">
+                        <span class="bn-invoice__total-label">Tổng tiền dịch vụ</span>
+                        <span class="bn-invoice__total-value"><%= tongTienDV %> đ</span>
+                    </div>
+                </div>
 
-            <%-- Gửi tiền dịch vụ (Dùng biến tongTienDV vừa tính ở trên) --%>
-            <input name="tiendv" type="hidden" value="<%= tongTienDV != null ? tongTienDV : "0"%>">
+                <!-- GRAND TOTAL -->
+                <%
+                    BigDecimal tongCuoiCung = bill1.getTongTienPhong().add(tongTienDV);
+                %>
 
-            <button type="submit" class="btn-save">
-                Lưu hoá đơn & Thanh toán
-            </button>
-        </form>
-        <%            }
-            }
-        %>
+                <div class="bn-invoice" style="padding: 24px;">
+                    <div class="bn-invoice__grand">
+                        <span class="bn-invoice__grand-label">Tổng thanh toán</span>
+                        <span class="bn-invoice__grand-value"><%= tongCuoiCung %> đ</span>
+                    </div>
 
+                    <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 20px; flex-wrap: wrap;">
+                        <a href="bill.jsp" class="bn-btn bn-btn--ghost">
+                            <i class="fa-solid fa-xmark"></i>
+                            Huỷ
+                        </a>
+
+                        <form action="SaveInvoiceServlet" method="POST" class="bn-inline-form">
+                            <input name="madp" type="hidden" value="<%= bill1.getMaDatPhong() %>">
+                            <input name="map" type="hidden" value="<%= bill1.getMaPhong() %>">
+                            <input name="tienphong" type="hidden" value="<%= bill1.getTongTienPhong() != null ? bill1.getTongTienPhong() : "0" %>">
+                            <input name="tiendv" type="hidden" value="<%= tongTienDV != null ? tongTienDV : "0" %>">
+
+                            <button type="submit" class="bn-btn bn-btn--success">
+                                <i class="fa-solid fa-check-double"></i>
+                                Lưu hoá đơn &amp; Thanh toán
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <%
+                        }
+                    }
+                %>
+
+            </main>
+
+            <footer class="bn-footer">
+                &copy; 2026 <strong>Hotel Staff</strong> · Hệ thống quản lý nội bộ
+            </footer>
+
+        </div>
     </body>
 </html>

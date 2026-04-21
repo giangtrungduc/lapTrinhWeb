@@ -56,7 +56,14 @@ public class ServiceManagementServlet extends HttpServlet {
                 break;
             }
             case "update": {
-                Integer maDV = Integer.parseInt(request.getParameter("maDV"));
+                String maDVRaw = request.getParameter("maDV");
+                if (maDVRaw == null || maDVRaw.trim().isEmpty()) {
+                    List<ServiceDTO> list = svDAO.listService();
+                    request.setAttribute("listService", list);
+                    request.setAttribute("errorMessage", "Vui long chon dich vu trong bang de do vao form truoc khi sua.");
+                    break;
+                }
+                Integer maDV = Integer.parseInt(maDVRaw.trim());
                 String tenDV = request.getParameter("tenDV");
                 BigDecimal donGia = new BigDecimal(request.getParameter("donGia"));
                 String moTa = request.getParameter("moTa");
