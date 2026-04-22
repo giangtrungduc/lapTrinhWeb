@@ -145,7 +145,7 @@ public class BookingByStaff extends HttpServlet {
                 BookingDAO bookingDAO = new BookingDAO();
                 bookingDAO.addNewBooking(newBooking);
 
-                response.sendRedirect("BookingByStaff?action=list&message=Đặt+phòng+thành+công!");
+                response.sendRedirect("BookingByStaff?action=list");
                 break;
             }
 

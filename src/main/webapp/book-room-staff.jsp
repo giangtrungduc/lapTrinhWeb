@@ -250,7 +250,7 @@
                                 <i class="fa-solid fa-xmark"></i>
                                 Huỷ
                             </a>
-                            <button type="submit" class="bn-btn bn-btn--primary">
+                            <button type="submit" class="bn-btn bn-btn--primary">                               
                                 <i class="fa-solid fa-check"></i>
                                 Xác nhận đặt phòng
                             </button>

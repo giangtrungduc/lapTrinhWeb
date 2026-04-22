@@ -133,7 +133,7 @@ public class BookingByCustomer extends HttpServlet {
                 BookingDAO bookingDAO = new BookingDAO();
                 bookingDAO.addNewBooking(newBooking);
 
-                response.sendRedirect("BookingByCustomer?action=list&message=Đặt+phòng+thành+công!");
+                response.sendRedirect("BookingByCustomer?action=list");
                 break;
             }
 
