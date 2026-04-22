@@ -62,7 +62,7 @@
                 </div>
             </section>
 
-            <!-- Content (lấn lên hero) -->
+            
             <main class="bn-container bn-container--after-hero bn-container--overlap">
 
                 <% if (message != null && !message.isEmpty()) { %>

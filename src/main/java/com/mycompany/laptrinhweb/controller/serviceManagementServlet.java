@@ -42,6 +42,13 @@ public class ServiceManagementServlet extends HttpServlet {
         }
         switch (action) {
             case "add": {
+                String maDVRaw = request.getParameter("maDV");
+                if (maDVRaw == null || maDVRaw.trim().isEmpty()) {
+                    List<ServiceDTO> list = svDAO.listService();
+                    request.setAttribute("listService", list);
+                    request.setAttribute("errorMessage1", "Vui long điền thông tin trước khi thêm dịch vụ.");
+                    break;
+                }
                 String tenDV = request.getParameter("tenDV");
                 BigDecimal donGia = new BigDecimal(request.getParameter("donGia"));
                 String moTa = request.getParameter("moTa");

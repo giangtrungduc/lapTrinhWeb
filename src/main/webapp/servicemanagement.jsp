@@ -76,7 +76,15 @@
         function validateUpdate() {
             var maDV = document.getElementById("maDV").value;
             if (!maDV || !maDV.trim()) {
-                alert("Vui long chon dich vu trong bang de do vao form truoc khi sua.");
+                alert("Vui lòng chọn dịch vụ trong bảng để đưa vào form trước khi sửa.");
+                return false;
+            }
+            return true;
+        }
+        function validateAdd() {
+            var maDV = document.getElementById("maDV").value;
+            if (!maDV || !maDV.trim()) {
+                alert("Vui lòng điền thông tin trước khi thêm dịch vụ.");
                 return false;
             }
             return true;
@@ -174,7 +182,7 @@
                             </div>
 
                             <div class="bn-form__actions">
-                                <button type="submit" name="action" value="add" class="bn-btn bn-btn--success">
+                                <button type="submit" name="action" value="add" class="bn-btn bn-btn--success" onclick="return validateAdd()">
                                     <i class="fa-solid fa-plus"></i>
                                     Thêm
                                 </button>

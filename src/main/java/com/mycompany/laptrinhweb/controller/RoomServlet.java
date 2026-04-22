@@ -24,7 +24,7 @@ public class RoomServlet extends HttpServlet {
         
         System.out.println(role);
 
-        // Chặn người không phải quản lý
+        
         if (!"Quan Ly".equals(role)) {
             response.sendRedirect("login.jsp");
             return;
@@ -37,7 +37,6 @@ public class RoomServlet extends HttpServlet {
         try {
             switch (action) {
 
-                // ========== PHÒNG ==========
 
                 case "list": {
                     List<RoomDTO> list = roomDAO.listRoom();
