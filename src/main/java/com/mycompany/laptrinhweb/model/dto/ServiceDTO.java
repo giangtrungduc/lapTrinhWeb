@@ -6,11 +6,25 @@ package com.mycompany.laptrinhweb.model.dto;
 
 import java.math.BigDecimal;
 
-
+/**
+ *
+ * @author giang
+ */
 public class ServiceDTO {
-    private int maDV,soLuong;
-    private String tenDV,moTa;
-    private BigDecimal donGia,thanhTien;
+    private int maDV;
+    private String tenDV;
+    private BigDecimal donGia;
+    private String moTa;
+
+    public ServiceDTO() {
+    }
+
+    public ServiceDTO(int maDV, String tenDV, BigDecimal donGia, String moTa) {
+        this.maDV = maDV;
+        this.tenDV = tenDV;
+        this.donGia = donGia;
+        this.moTa = moTa;
+    }
 
     public int getMaDV() {
         return maDV;
@@ -18,14 +32,6 @@ public class ServiceDTO {
 
     public void setMaDV(int maDV) {
         this.maDV = maDV;
-    }
-
-    public int getSoLuong() {
-        return soLuong;
-    }
-
-    public void setSoLuong(int soLuong) {
-        this.soLuong = soLuong;
     }
 
     public String getTenDV() {
@@ -36,14 +42,6 @@ public class ServiceDTO {
         this.tenDV = tenDV;
     }
 
-    public String getMoTa() {
-        return moTa;
-    }
-
-    public void setMoTa(String moTa) {
-        this.moTa = moTa;
-    }
-
     public BigDecimal getDonGia() {
         return donGia;
     }
@@ -52,12 +50,12 @@ public class ServiceDTO {
         this.donGia = donGia;
     }
 
-    public BigDecimal getThanhTien() {
-        return thanhTien;
+    public String getMoTa() {
+        return moTa;
     }
 
-    public void setThanhTien(BigDecimal thanhTien) {
-        this.thanhTien = thanhTien;
+    public void setMoTa(String moTa) {
+        this.moTa = moTa;
     }
     
 }
